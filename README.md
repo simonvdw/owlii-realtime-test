@@ -161,4 +161,4 @@ ISC
 
 ---
 
-Gemaakt met ❤️ voor educatieve voice AI experimenten
+Made with ❤️ by Mimo
