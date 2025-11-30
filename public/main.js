@@ -14,6 +14,7 @@ const logEl = document.getElementById("log");
 let session = null;
 let hasStarted = false;
 let userName = "";
+let tailTimeoutId = null;
 
 function log(message) {
   console.log(message);
@@ -123,6 +124,11 @@ function stopConversation() {
 
   log("Stop button pressed. Interrupting and closing session.");
 
+  if (tailTimeoutId) {
+    clearTimeout(tailTimeoutId);
+    tailTimeoutId = null;
+  }
+
   try {
     // Stop huidige output en eventueel lopende respons
     session.interrupt();
@@ -141,6 +147,7 @@ function stopConversation() {
   stopButton.disabled = true;
   pressToTalkButton.disabled = true;
   pressToTalkButton.classList.remove("active");
+  pressToTalkButton.classList.remove("tail");
   nameInput.disabled = false;
 }
 
@@ -154,11 +161,16 @@ function stopConversation() {
  */
 
 const startTalking = (event) => {
-  event.preventDefault();
+  event?.preventDefault?.();
   if (!session) return;
+  if (tailTimeoutId) {
+    clearTimeout(tailTimeoutId);
+    tailTimeoutId = null;
+  }
   try {
     session.mute(false);
     pressToTalkButton.classList.add("active");
+    pressToTalkButton.classList.remove("tail");
     log("Mic open (push to talk ingedrukt).");
   } catch (err) {
     console.error("Error unmuting session:", err);
@@ -167,13 +179,24 @@ const startTalking = (event) => {
 
 const stopTalking = () => {
   if (!session) return;
-  try {
-    session.mute(true);
-    pressToTalkButton.classList.remove("active");
-    log("Mic weer dicht.");
-  } catch (err) {
-    console.error("Error muting session:", err);
+  if (tailTimeoutId) {
+    clearTimeout(tailTimeoutId);
   }
+
+  pressToTalkButton.classList.add("tail");
+
+  tailTimeoutId = setTimeout(() => {
+    tailTimeoutId = null;
+    if (!session) return;
+    try {
+      session.mute(true);
+      pressToTalkButton.classList.remove("active");
+      pressToTalkButton.classList.remove("tail");
+      log("Mic weer dicht.");
+    } catch (err) {
+      console.error("Error muting session:", err);
+    }
+  }, 1000);
 };
 
 // Mouse en touch voor de TALK knop
