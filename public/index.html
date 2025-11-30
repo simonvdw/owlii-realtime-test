@@ -50,13 +50,23 @@
     </style>
   </head>
   <body>
-<h1>Owlii Test</h1>
+<h1>Owlii Realtime Test</h1>
 <p id="status">Nog niet verbonden.</p>
 
-<div style="display:flex; gap:1rem; justify-content:center; margin-bottom:1rem;">
+<div style="display:flex; gap:1rem; justify-content:center; margin-bottom:1rem; flex-wrap:wrap;">
   <button id="talkButton">Start gesprek</button>
   <button id="stopButton" disabled>Stop gesprek</button>
+  <button id="pressToTalkButton" disabled>Talk (ingedrukt houden)</button>
 </div>
+
+<div id="log"></div>
+
+<style>
+  #pressToTalkButton.active {
+    background-color: #16a34a;
+    color: white;
+  }
+</style>
 
 <div id="log"></div>
 

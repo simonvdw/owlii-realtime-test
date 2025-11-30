@@ -2,8 +2,10 @@
 
 import { RealtimeAgent, RealtimeSession } from "https://cdn.jsdelivr.net/npm/@openai/agents-realtime@latest/+esm";
 
-const button = document.getElementById("talkButton");
-const stopButton = document.getElementById("stopButton");
+const button = document.getElementById("talkButton");          // Start gesprek
+const stopButton = document.getElementById("stopButton");      // Stop gesprek
+const pressToTalkButton = document.getElementById("pressToTalkButton"); // Talk ingedrukt houden
+
 const statusEl = document.getElementById("status");
 const logEl = document.getElementById("log");
 
@@ -16,8 +18,7 @@ function log(message) {
 }
 
 /**
- * OWLY instructies, gecombineerd met een paar extra veiligheidsregels.
- * Dit zijn de "system" instructies van de RealtimeAgent. :contentReference[oaicite:0]{index=0}
+ * OWLY instructies, gecombineerd met extra veiligheidsregels.
  */
 function createOwlyAgent() {
   return new RealtimeAgent({
@@ -62,7 +63,7 @@ GESPREKSDYNAMIEK
 GRENZEN EN VEILIGHEID
 - Praat niet inhoudelijk over geweld, politiek, complotten, verslaving, seks of andere controversiële of volwassen thema’s.
 - Als Elo daar toch naar vraagt, zeg dan dat dat geen onderwerp is voor kinderen en stel een kindvriendelijk, educatief onderwerp voor.
-- Houd morele waarden hoog: stimuleer eerlijkheid, vriendelijkheid, respect, zorg voor natuur en anderen.
+- Houd morele waarden hoog: stimuleer eerlijkheid, vriendelijkheid, respect en zorg voor natuur en anderen.
 - Verzin geen enge details en maak Elo niet bang.
 
 GESPREK AFSLUITEN
@@ -74,14 +75,14 @@ SAMENVATTING VAN JE ROL
 - Je bent een vriendelijke, nieuwsgierige en wijze uil die Elo helpt leren, nadenken en vragen stellen.
 - Hou het gesprek licht, speels, veilig en leerrijk.
     `.trim(),
-    // Optioneel een vaste stem kiezen, als je dat wil:
+    // Optioneel: vaste stem
     // voice: "shimmer",
   });
 }
 
 /**
  * Start de Realtime sessie.
- * In de browser gebruikt RealtimeSession automatisch WebRTC en regelt dus microfoon en audio. :contentReference[oaicite:1]{index=1}
+ * In de browser gebruikt RealtimeSession automatisch WebRTC en regelt dus microfoon en audio.
  */
 async function startConversation() {
   if (hasStarted) {
@@ -91,6 +92,8 @@ async function startConversation() {
 
   button.disabled = true;
   stopButton.disabled = true;
+  pressToTalkButton.disabled = true;
+
   statusEl.textContent = "Token ophalen en verbinden...";
   log("Requesting ephemeral token from /api/token");
 
@@ -124,18 +127,24 @@ async function startConversation() {
 
     await session.connect({ apiKey });
 
+    // Mic standaard uit: push to talk
+    session.mute(true);
+
     statusEl.textContent =
-      "Verbonden met OWLY. Sta microfoontoegang toe en praat dan tegen je toestel.";
+      "Verbonden met OWLY. Gebruik de TALK knop om te praten.";
     button.textContent = "Verbonden";
     button.disabled = true;
     stopButton.disabled = false;
-    log("Connected. Start talking.");
+    pressToTalkButton.disabled = false;
+
+    log("Connected. Push to talk is actief.");
   } catch (err) {
     console.error(err);
     statusEl.textContent = "Kon niet verbinden. Zie console voor details.";
     hasStarted = false;
     button.disabled = false;
     stopButton.disabled = true;
+    pressToTalkButton.disabled = true;
   }
 }
 
@@ -144,8 +153,6 @@ async function startConversation() {
  * - onderbreekt de huidige audio
  * - sluit de sessie
  * - zet de UI terug in starttoestand
- *
- * RealtimeSession.interrupt is in de SDK expliciet bedoeld voor een "stop talking" knop. :contentReference[oaicite:2]{index=2}
  */
 function stopConversation() {
   if (!session) {
@@ -170,8 +177,64 @@ function stopConversation() {
   button.disabled = false;
   button.textContent = "Start gesprek";
   stopButton.disabled = true;
+  pressToTalkButton.disabled = true;
+  pressToTalkButton.classList.remove("active");
 }
 
+/**
+ * Push to talk:
+ * - mic blijft standaard gemute
+ * - bij indrukken TALK: session.mute(false)
+ * - bij loslaten: session.mute(true)
+ *
+ * We hangen de listeners eenmalig aan en checken binnenin of er een sessie is.
+ */
+
+const startTalking = (event) => {
+  event.preventDefault();
+  if (!session) return;
+  try {
+    session.mute(false);
+    pressToTalkButton.classList.add("active");
+    log("Mic open (push to talk ingedrukt).");
+  } catch (err) {
+    console.error("Error unmuting session:", err);
+  }
+};
+
+const stopTalking = () => {
+  if (!session) return;
+  try {
+    session.mute(true);
+    pressToTalkButton.classList.remove("active");
+    log("Mic weer dicht.");
+  } catch (err) {
+    console.error("Error muting session:", err);
+  }
+};
+
+// Mouse en touch voor de TALK knop
+pressToTalkButton.addEventListener("mousedown", startTalking);
+pressToTalkButton.addEventListener("touchstart", startTalking);
+
+// Loslaten, ook als je van de knop schuift
+window.addEventListener("mouseup", stopTalking);
+window.addEventListener("touchend", stopTalking);
+
+// Spacebar support voor de TALK knop
+window.addEventListener("keydown", (event) => {
+  if (event.code === "Space" && !event.repeat) {
+    startTalking(event);
+  }
+});
+
+window.addEventListener("keyup", (event) => {
+  if (event.code === "Space") {
+    stopTalking();
+  }
+});
+
+// Start en stop knoppen
 button.addEventListener("click", () => {
   startConversation();
 });
