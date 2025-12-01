@@ -46,6 +46,57 @@
   </div>
 </div>
 
+<!-- Dierengeluiden Game -->
+<div class="game-container" style="margin-top: 3rem;">
+  <h2>🐾 Dierengeluiden!</h2>
+  <p class="game-description">Raad het dier aan de hand van het geluid - 1 minuut!</p>
+
+  <div id="animalGameStart" class="game-screen active">
+    <div id="animalAgeWarning" class="age-warning" style="display: none;">
+      <p>⚠️ We kennen je leeftijd nog niet!</p>
+      <p>Ga eerst naar de <a href="/">Home pagina</a> en vul je gegevens in.</p>
+    </div>
+    <div id="animalAgeDisplay" style="display: none;">
+      <p>Hoi <span id="animalPlayerName"></span>! 👋</p>
+      <p>Je bent of wordt <span id="animalPlayerAge"></span> jaar oud</p>
+    </div>
+    <button id="animalStartButton" class="game-button">START SPEL 🚀</button>
+  </div>
+
+  <div id="animalGamePlay" class="game-screen">
+    <div class="game-header">
+      <div class="timer">⏱️ <span id="animalTimeLeft">60</span>s</div>
+      <div class="score">Score: <span id="animalCurrentScore">0</span>/10</div>
+    </div>
+
+    <div class="question-container">
+      <div class="question-number">Ronde <span id="animalRoundNumber">1</span>/10</div>
+      <div class="animal-sound-prompt">
+        <div class="sound-icon">🔊</div>
+        <p>Luister naar het geluid en kies het juiste dier!</p>
+        <button id="animalReplayButton" class="replay-button">🔄 Opnieuw afspelen</button>
+      </div>
+
+      <div class="answer-buttons">
+        <button class="animal-answer-button" data-animal="">🦆<br>eend</button>
+        <button class="animal-answer-button" data-animal="">🐐<br>geit</button>
+        <button class="animal-answer-button" data-animal="">🐔<br>kip</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="animalGameEnd" class="game-screen">
+    <div class="result-container">
+      <h3 id="animalResultTitle">Goed gedaan! 🎉</h3>
+      <div class="final-score">
+        <span id="animalFinalScore">0</span>/10
+      </div>
+      <p id="animalResultMessage">Je kent je dieren!</p>
+      <button id="animalPlayAgainButton" class="game-button">Speel Opnieuw 🔄</button>
+    </div>
+  </div>
+</div>
+
 <style>
 .game-container {
   margin-top: 2rem;
@@ -259,6 +310,104 @@
 
   .final-score {
     font-size: 3rem;
+  }
+}
+
+/* Animal Game Specific Styles */
+.animal-sound-prompt {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: rgba(240, 163, 85, 0.1);
+  border-radius: 1.5rem;
+  border: 2px dashed rgba(240, 163, 85, 0.3);
+}
+
+.sound-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.animal-sound-prompt p {
+  font-size: 1.2rem;
+  color: #6f4f44;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.replay-button {
+  background: linear-gradient(135deg, #5a8c50 0%, #4a7540 100%);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(90, 140, 80, 0.3);
+  font-family: 'Fredoka', sans-serif;
+  width: auto;
+  margin: 0 auto;
+  display: inline-block;
+}
+
+.replay-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(90, 140, 80, 0.5);
+}
+
+.animal-answer-button {
+  background: linear-gradient(135deg, #f0a355 0%, #e89043 100%);
+  color: white;
+  border: none;
+  padding: 1.2rem 2rem;
+  border-radius: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(240, 163, 85, 0.3);
+  font-family: 'Fredoka', sans-serif;
+  line-height: 1.6;
+}
+
+.animal-answer-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(240, 163, 85, 0.5);
+}
+
+.animal-answer-button:active {
+  transform: scale(0.95);
+}
+
+.animal-answer-button.correct {
+  background: linear-gradient(135deg, #5a8c50 0%, #4a7540 100%);
+  animation: correctPulse 0.5s ease;
+}
+
+.animal-answer-button.wrong {
+  background: linear-gradient(135deg, #d9534f 0%, #c9302c 100%);
+  animation: wrongShake 0.5s ease;
+}
+
+@media (max-width: 768px) {
+  .animal-answer-button {
+    font-size: 1.1rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .sound-icon {
+    font-size: 3rem;
+  }
+
+  .animal-sound-prompt p {
+    font-size: 1rem;
   }
 }
 </style>
