@@ -1,0 +1,19 @@
+{
+  "name": "Hey Owly",
+  "short_name": "Owly",
+  "description": "Jouw persoonlijke AI leerassistent",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5faf5",
+  "theme_color": "#5a8c50",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "owly.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
+
