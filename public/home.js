@@ -11,6 +11,7 @@ const nameInput = document.getElementById("nameInput");        // Voornaam input
 
 const statusEl = document.getElementById("status");
 const logEl = document.getElementById("log");
+const toggleLogsLink = document.getElementById("toggleLogs");
 
 let session = null;
 let hasStarted = false;
@@ -21,6 +22,11 @@ let tailTimeoutId = null;
 function log(message) {
   console.log(message);
   logEl.textContent += message + "\n";
+
+  // Show toggle link when there are logs
+  if (toggleLogsLink && toggleLogsLink.style.display === 'none') {
+    toggleLogsLink.style.display = 'inline-block';
+  }
 }
 
 /**

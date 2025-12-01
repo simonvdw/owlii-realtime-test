@@ -31,6 +31,20 @@
     document.getElementById('chatInterface').classList.remove('active');
   }
 
+  // Toggle logs visibility
+  function toggleLogs() {
+    const logEl = document.getElementById('log');
+    const toggleLink = document.getElementById('toggleLogs');
+
+    if (logEl.style.display === 'none') {
+      logEl.style.display = 'block';
+      toggleLink.textContent = 'Verberg logs';
+    } else {
+      logEl.style.display = 'none';
+      toggleLink.textContent = 'Toon logs';
+    }
+  }
+
   // Load saved data on page load
   window.addEventListener('DOMContentLoaded', () => {
     const savedName = getCookie('owlyUserName');
@@ -48,6 +62,15 @@
       // Store in sessionStorage for chat
       sessionStorage.setItem('userName', savedName);
       sessionStorage.setItem('userAge', savedAge);
+    }
+
+    // Setup toggle logs link
+    const toggleLink = document.getElementById('toggleLogs');
+    if (toggleLink) {
+      toggleLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleLogs();
+      });
     }
   });
 
