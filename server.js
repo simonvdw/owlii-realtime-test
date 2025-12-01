@@ -6,13 +6,30 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve the static frontend from /public
-app.use(express.static(path.join(__dirname, "public")));
+// Routes for different pages (BEFORE static middleware)
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.get("/original", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "original.html"));
+});
+
+app.get("/extras", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "extras.html"));
+});
+
+app.get("/over-ons", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "over-ons.html"));
+});
 
 // Simple health check
 app.get("/health", (req, res) => {
   res.json({ ok: true });
 });
+
+// Serve static files (CSS, JS, images, etc.) from /public
+app.use(express.static(path.join(__dirname, "public")));
 
 /**
  * Endpoint for the browser to request a short lived Realtime client secret.

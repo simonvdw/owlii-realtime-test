@@ -2,62 +2,229 @@
 <html lang="nl">
   <head>
     <meta charset="utf-8" />
-    <title>Owlii Realtime Test</title>
+    <title>Hey Owly - Leer en Speel met OWLY</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: 'Fredoka', 'Comic Sans MS', cursive, sans-serif;
+        background: linear-gradient(135deg, #8b7355 0%, #6f4f44 50%, #4a3428 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        color: #2d2416;
+      }
+
+      /* Header */
+      header {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 1rem 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .logo {
+        font-size: 2rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .logo .hey {
+        color: #f0a355;
+      }
+
+      .logo .owly {
+        color: #6f4f44;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #6f4f44;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      nav a:hover {
+        color: #f0a355;
+      }
+
+      /* Main Content */
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         padding: 2rem;
-        background: #0b1020;
-        color: #f5f5f5;
         text-align: center;
       }
-      h1 {
-        margin-bottom: 1rem;
+
+      .hero {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 2rem;
+        padding: 3rem 2rem;
+        max-width: 600px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       }
+
+      .owl-image {
+        width: 180px;
+        height: 180px;
+        margin: 0 auto 2rem;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .owl-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+
+      h1 .hey {
+        color: #f0a355;
+      }
+
+      h1 .owly {
+        color: #6f4f44;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        color: #6f4f44;
+        margin-bottom: 2rem;
+        font-weight: 500;
+      }
+
+      /* Form */
+      .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        color: #6f4f44;
+        font-weight: 600;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.875rem 1.25rem;
+        font-size: 1rem;
+        border-radius: 1rem;
+        border: 3px solid #f0a355;
+        background: #fff;
+        color: #2d2416;
+        font-family: 'Fredoka', sans-serif;
+        transition: all 0.3s ease;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #6f4f44;
+        box-shadow: 0 0 0 4px rgba(240, 163, 85, 0.2);
+      }
+
+      .hint {
+        font-size: 0.75rem;
+        color: #8b7355;
+        margin-top: 0.25rem;
+        font-style: italic;
+      }
+
+      button {
+        width: 100%;
+        padding: 1rem 2rem;
+        border-radius: 1.5rem;
+        border: none;
+        font-size: 1.3rem;
+        cursor: pointer;
+        background: linear-gradient(135deg, #f0a355 0%, #e89043 100%);
+        color: white;
+        font-family: 'Fredoka', sans-serif;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(240, 163, 85, 0.3);
+        margin-top: 1rem;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(240, 163, 85, 0.5);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      /* Chat interface styles */
+      #chatInterface {
+        display: none;
+      }
+
+      #chatInterface.active {
+        display: block;
+      }
+
       #status {
         margin: 1rem 0;
         font-size: 0.95rem;
-        opacity: 0.85;
+        color: #6f4f44;
       }
-      button {
-        padding: 1rem 2rem;
-        border-radius: 999px;
-        border: none;
-        font-size: 1.1rem;
-        cursor: pointer;
-        background: #4f46e5;
-        color: white;
-        transition: all 0.2s ease;
-        font-weight: 500;
+
+      .chat-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin: 1.5rem 0;
+        flex-wrap: wrap;
       }
-      button:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
-      }
-      button:active:not(:disabled) {
-        transform: translateY(0);
-      }
-      button:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-      
-      /* Start & Stop knoppen */
-      #talkButton, #stopButton {
+
+      .chat-buttons button {
+        width: auto;
         padding: 0.75rem 1.75rem;
         font-size: 1rem;
       }
-      
+
       #stopButton {
-        background: #dc2626;
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
       }
-      
-      #stopButton:hover:not(:disabled) {
-        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
-      }
-      
-      /* Grote TALK knop */
+
       #pressToTalkButton {
         width: 180px;
         height: 180px;
@@ -65,27 +232,27 @@
         font-size: 1.5rem;
         font-weight: 700;
         padding: 0;
-        background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-        border: 4px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+        background: linear-gradient(135deg, #f0a355 0%, #e89043 100%);
+        border: 4px solid rgba(111, 79, 68, 0.2);
+        box-shadow: 0 8px 24px rgba(240, 163, 85, 0.3);
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto;
       }
-      
+
       #pressToTalkButton:hover:not(:disabled) {
         transform: scale(1.05);
-        box-shadow: 0 12px 32px rgba(79, 70, 229, 0.5);
+        box-shadow: 0 12px 32px rgba(240, 163, 85, 0.5);
       }
-      
+
       #pressToTalkButton:active:not(:disabled) {
         transform: scale(0.95);
       }
-      
+
       #pressToTalkButton.active {
         background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
-        border-color: rgba(255, 255, 255, 0.3);
+        border-color: rgba(111, 79, 68, 0.3);
         box-shadow: 0 12px 32px rgba(22, 163, 74, 0.6);
         animation: pulse 1.5s ease-in-out infinite;
       }
@@ -94,23 +261,26 @@
         animation: tailFade 1s ease forwards;
       }
 
-      /* Wave icon inside TALK button */
       #pressToTalkButton .wave-icon {
         width: 70%;
         height: 70%;
         display: block;
       }
+
       #pressToTalkButton .wave-icon rect {
         fill: #ffffff;
         opacity: 0.9;
         transform-origin: 50% 100%;
       }
+
       #pressToTalkButton.active .wave-icon rect {
         animation: waveBeat 1.2s ease-in-out infinite;
       }
+
       #pressToTalkButton.tail .wave-icon rect {
         opacity: 0.6;
       }
+
       #pressToTalkButton.active .wave-icon rect:nth-child(1) { animation-delay: 0s; }
       #pressToTalkButton.active .wave-icon rect:nth-child(2) { animation-delay: 0.08s; }
       #pressToTalkButton.active .wave-icon rect:nth-child(3) { animation-delay: 0.16s; }
@@ -121,7 +291,7 @@
         0%, 100% { transform: scaleY(0.6); }
         50% { transform: scaleY(1.2); }
       }
-      
+
       @keyframes pulse {
         0%, 100% {
           box-shadow: 0 12px 32px rgba(22, 163, 74, 0.6);
@@ -137,63 +307,166 @@
           box-shadow: 0 12px 32px rgba(22, 163, 74, 0.6);
         }
         100% {
-          background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-          box-shadow: 0 10px 24px rgba(79, 70, 229, 0.35);
+          background: linear-gradient(135deg, #f0a355 0%, #e89043 100%);
+          box-shadow: 0 10px 24px rgba(240, 163, 85, 0.35);
         }
       }
-      
+
       #log {
         text-align: left;
         margin-top: 2rem;
         padding: 1rem;
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(111, 79, 68, 0.1);
         border-radius: 0.75rem;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
         font-size: 0.85rem;
         max-height: 200px;
         overflow-y: auto;
         white-space: pre-wrap;
+        color: #6f4f44;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.2rem;
+        }
+
+        .logo {
+          font-size: 1.5rem;
+        }
+
+        nav ul {
+          gap: 1rem;
+        }
+
+        .hero {
+          padding: 2rem 1.5rem;
+        }
       }
     </style>
   </head>
   <body>
-<h1>Owlii Realtime Test</h1>
-<p id="status">Nog niet verbonden.</p>
+    <header>
+      <nav>
+        <a href="/" class="logo">
+          <span class="hey">Hey</span> <span class="owly">Owly</span>
+        </a>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/extras">Extra's</a></li>
+          <li><a href="/over-ons">Over</a></li>
+        </ul>
+      </nav>
+    </header>
 
-<div id="nameForm" style="margin-bottom: 1.5rem;">
-  <label for="nameInput" style="display: block; margin-bottom: 0.5rem; font-size: 1.1rem;">Wat is je voornaam?</label>
-  <input 
-    type="text" 
-    id="nameInput" 
-    placeholder="Jouw voornaam" 
-    style="padding: 0.75rem 1rem; font-size: 1rem; border-radius: 0.5rem; border: 2px solid #4f46e5; background: #1a1f35; color: #f5f5f5; min-width: 250px;"
-  />
-</div>
+    <main>
+      <div class="hero">
+        <div style="text-align: right; margin-bottom: 1rem;">
+          <a href="/original" style="color: #dc2626; text-decoration: none; font-size: 0.9rem; font-weight: 500;">
+            Originele realtime test pagina →
+          </a>
+        </div>
 
-<div style="display:flex; gap:1rem; justify-content:center; margin-bottom:2rem; flex-wrap:wrap;">
-  <button id="talkButton">Start gesprek</button>
-  <button id="stopButton" disabled>Stop gesprek</button>
-</div>
+        <div class="owl-image">
+          <img src="owly.png" alt="OWLY de wijze uil">
+        </div>
 
-<div style="margin: 2rem 0;">
-  <button id="pressToTalkButton" disabled aria-label="Houd ingedrukt om te praten">
-    <svg class="wave-icon" viewBox="0 0 120 120" role="img" aria-hidden="true">
-      <rect x="18" y="30" width="14" height="60" rx="7"></rect>
-      <rect x="38" y="18" width="14" height="84" rx="7"></rect>
-      <rect x="58" y="8" width="14" height="104" rx="7"></rect>
-      <rect x="78" y="18" width="14" height="84" rx="7"></rect>
-      <rect x="98" y="30" width="14" height="60" rx="7"></rect>
-    </svg>
-  </button>
-  <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
-    Houd ingedrukt om te praten (of gebruik spatiebalk)
-  </p>
-</div>
+        <h1>
+          <span class="hey">Hey</span> <span class="owly">Owly</span>
+        </h1>
 
-<div id="log"></div>
+        <p class="subtitle">Leer en speel met OWLY, jouw slimme uilvriend! 🦉</p>
+
+        <div id="welcomeForm">
+          <form id="startForm">
+            <div class="form-group">
+              <label for="nameInput">Wat is je voornaam?</label>
+              <input
+                type="text"
+                id="nameInput"
+                placeholder="Jouw voornaam"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="birthYearInput">Wat is je geboortejaar?</label>
+              <input
+                type="number"
+                id="birthYearInput"
+                placeholder="Bijvoorbeeld: 2015"
+                min="2000"
+                max="2025"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="betaCodeInput">Beta code</label>
+              <input
+                type="text"
+                id="betaCodeInput"
+                placeholder="Voer je code in"
+                required
+              />
+              <p class="hint">Tip: gebruik gewoon "BETA"</p>
+            </div>
+
+            <button type="submit">Start je avontuur met OWLY! 🚀</button>
+          </form>
+        </div>
+
+        <div id="chatInterface">
+          <p id="status">Nog niet verbonden.</p>
+
+          <div class="chat-buttons">
+            <button id="talkButton">Start gesprek</button>
+            <button id="stopButton" disabled>Stop gesprek</button>
+          </div>
+
+          <div style="margin: 2rem 0;">
+            <button id="pressToTalkButton" disabled aria-label="Houd ingedrukt om te praten">
+              <svg class="wave-icon" viewBox="0 0 120 120" role="img" aria-hidden="true">
+                <rect x="18" y="30" width="14" height="60" rx="7"></rect>
+                <rect x="38" y="18" width="14" height="84" rx="7"></rect>
+                <rect x="58" y="8" width="14" height="104" rx="7"></rect>
+                <rect x="78" y="18" width="14" height="84" rx="7"></rect>
+                <rect x="98" y="30" width="14" height="60" rx="7"></rect>
+              </svg>
+            </button>
+            <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7; color: #6f4f44;">
+              Houd ingedrukt om te praten (of gebruik spatiebalk)
+            </p>
+          </div>
+
+          <div id="log"></div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.getElementById('startForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('nameInput').value.trim();
+        const birthYear = document.getElementById('birthYearInput').value.trim();
+        const betaCode = document.getElementById('betaCodeInput').value.trim();
+
+        if (betaCode.toUpperCase() !== 'BETA') {
+          alert('Oeps! De beta code klopt niet. Probeer "BETA".');
+          return;
+        }
+
+        // Store user info
+        sessionStorage.setItem('userName', name);
+        sessionStorage.setItem('userBirthYear', birthYear);
+
+        // Hide form, show chat interface
+        document.getElementById('welcomeForm').style.display = 'none';
+        document.getElementById('chatInterface').classList.add('active');
+      });
+    </script>
     <script type="module" src="owly-instructions.js"></script>
-    <script type="module" src="main.js"></script>
+    <script type="module" src="home.js"></script>
   </body>
 </html>
