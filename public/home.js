@@ -17,6 +17,7 @@ let session = null;
 let hasStarted = false;
 let userName = "";
 let userAge = "";
+let conversationType = "standaard";
 let tailTimeoutId = null;
 
 function log(message) {
@@ -33,11 +34,12 @@ function log(message) {
  * OWLY instructies, gecombineerd met extra veiligheidsregels.
  * @param {string} name - De voornaam van het kind
  * @param {number} age - De leeftijd van het kind
+ * @param {string} type - Het gesprekstype (standaard, verhaaltjes, raadsels, mopjes)
  */
-function createOwlyAgent(name, age) {
+function createOwlyAgent(name, age, type) {
   return new RealtimeAgent({
     name: "OWLY",
-    instructions: getOwlyInstructions(name, age),
+    instructions: getOwlyInstructions(name, age, type),
   });
 }
 
@@ -53,6 +55,7 @@ async function startConversation() {
   // Get user data from sessionStorage (set by the form)
   userName = sessionStorage.getItem('userName') || '';
   userAge = sessionStorage.getItem('userAge') || '';
+  conversationType = sessionStorage.getItem('conversationType') || 'standaard';
 
   if (!userName || !userAge) {
     statusEl.textContent = "Vul eerst je gegevens in!";
@@ -82,7 +85,7 @@ async function startConversation() {
 
     log("Got ephemeral key. Creating OWLY agent and session.");
 
-    const agent = createOwlyAgent(userName, userAge);
+    const agent = createOwlyAgent(userName, userAge, conversationType);
 
     session = new RealtimeSession(agent, {
       model: "gpt-realtime",
@@ -246,3 +249,52 @@ button.addEventListener("click", () => {
 stopButton.addEventListener("click", () => {
   stopConversation();
 });
+
+// Conversation Type Carousel Logic
+const conversationTypes = ['standaard', 'verhaaltjes', 'raadsels', 'mopjes'];
+let currentTypeIndex = 0;
+
+// Initialize carousel from sessionStorage
+const savedType = sessionStorage.getItem('conversationType');
+if (savedType) {
+  const savedIndex = conversationTypes.indexOf(savedType);
+  if (savedIndex !== -1) {
+    currentTypeIndex = savedIndex;
+  }
+}
+
+function updateCarousel() {
+  const allTypes = document.querySelectorAll('.conversation-type');
+  allTypes.forEach((typeEl, index) => {
+    if (index === currentTypeIndex) {
+      typeEl.classList.add('active');
+    } else {
+      typeEl.classList.remove('active');
+    }
+  });
+
+  // Save to sessionStorage
+  conversationType = conversationTypes[currentTypeIndex];
+  sessionStorage.setItem('conversationType', conversationType);
+}
+
+// Initialize carousel display
+updateCarousel();
+
+// Carousel navigation
+const carouselLeft = document.getElementById('carouselLeft');
+const carouselRight = document.getElementById('carouselRight');
+
+if (carouselLeft) {
+  carouselLeft.addEventListener('click', () => {
+    currentTypeIndex = (currentTypeIndex - 1 + conversationTypes.length) % conversationTypes.length;
+    updateCarousel();
+  });
+}
+
+if (carouselRight) {
+  carouselRight.addEventListener('click', () => {
+    currentTypeIndex = (currentTypeIndex + 1) % conversationTypes.length;
+    updateCarousel();
+  });
+}
