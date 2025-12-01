@@ -18,6 +18,29 @@ function getGrade(age) {
   return gradeNames[grade] || 'school';
 }
 
+function getDateTimeContext(now = new Date()) {
+  const dateFormatter = new Intl.DateTimeFormat('nl-BE', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  const timeFormatter = new Intl.DateTimeFormat('nl-BE', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  const dateLabel = dateFormatter.format(now);
+  const timeLabel = timeFormatter.format(now);
+
+  return `
+TIJD EN MOMENT
+- Vandaag is ${dateLabel}.
+- Het is momenteel ${timeLabel}. Kies begroetingen en voorbeelden die hierbij passen (geen "goedemorgen" als het avond is).
+- Gebruik deze tijdscontext in je antwoord wanneer dat relevant is.
+  `.trim();
+}
+
 // Basis instructies die voor alle gesprekstypes gelden
 function getBaseInstructions(name, age, grade) {
   return `
@@ -179,6 +202,7 @@ SAMENVATTING VAN JE ROL
 
 export function getOwlyInstructions(name, age, conversationType = 'standaard', topic = '') {
   const grade = getGrade(age);
+  const dateTimeContext = getDateTimeContext();
   const baseInstructions = getBaseInstructions(name, age, grade);
   const typeInstructions = getConversationTypeInstructions(conversationType, name, age);
 
@@ -194,6 +218,8 @@ Gebruik dit onderwerp als basis voor het gesprek. Controleer eerst of het onderw
   }
 
   return `${baseInstructions}
+
+${dateTimeContext}
 
 ${typeInstructions}${topicContext}`.trim();
 }
