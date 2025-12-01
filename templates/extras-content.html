@@ -1,4 +1,264 @@
 <h1>Extra's 🎁</h1>
-<p>Binnenkort vind je hier leuke extra's en activiteiten met OWLY!</p>
-<p style="margin-top: 1rem;">Blijf terugkomen voor nieuwe verrassingen! 🦉✨</p>
 
+<div class="game-container">
+  <h2>🧮 Reken Maar!</h2>
+  <p class="game-description">Test je rekenvaardigheden in 1 minuut!</p>
+
+  <div id="gameStart" class="game-screen active">
+    <div id="ageWarning" class="age-warning" style="display: none;">
+      <p>⚠️ We kennen je leeftijd nog niet!</p>
+      <p>Ga eerst naar de <a href="/">Home pagina</a> en vul je gegevens in.</p>
+    </div>
+    <div id="ageDisplay" style="display: none;">
+      <p>Hoi <span id="playerName"></span>! 👋</p>
+      <p>Je bent <span id="playerAge"></span> jaar oud</p>
+    </div>
+    <button id="startButton" class="game-button">START SPEL 🚀</button>
+  </div>
+
+  <div id="gamePlay" class="game-screen">
+    <div class="game-header">
+      <div class="timer">⏱️ <span id="timeLeft">60</span>s</div>
+      <div class="score">Score: <span id="currentScore">0</span>/10</div>
+    </div>
+
+    <div class="question-container">
+      <div class="question-number">Vraag <span id="questionNumber">1</span>/10</div>
+      <div class="equation" id="equation">5 + 3 = ?</div>
+
+      <div class="answer-buttons">
+        <button class="answer-button" data-answer="0">8</button>
+        <button class="answer-button" data-answer="1">7</button>
+        <button class="answer-button" data-answer="2">9</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gameEnd" class="game-screen">
+    <div class="result-container">
+      <h3 id="resultTitle">Goed gedaan! 🎉</h3>
+      <div class="final-score">
+        <span id="finalScore">0</span>/10
+      </div>
+      <p id="resultMessage">Je bent een rekenster!</p>
+      <button id="playAgainButton" class="game-button">Speel Opnieuw 🔄</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.game-container {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(90, 140, 80, 0.12) 0%, rgba(240, 163, 85, 0.08) 100%);
+  border-radius: 1.5rem;
+  border: 2px solid rgba(90, 140, 80, 0.25);
+}
+
+.game-container h2 {
+  font-size: 2rem;
+  color: #4a5d3f;
+  margin-bottom: 0.5rem;
+}
+
+.game-description {
+  color: #5a8c50;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.game-screen {
+  display: none;
+}
+
+.game-screen.active {
+  display: block;
+}
+
+.age-warning {
+  background: rgba(240, 163, 85, 0.2);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  border: 2px solid rgba(240, 163, 85, 0.4);
+}
+
+.age-warning p {
+  margin: 0.5rem 0;
+  color: #6f4f44;
+  font-weight: 600;
+}
+
+.age-warning a {
+  color: #5a8c50;
+  text-decoration: underline;
+}
+
+#ageDisplay {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(90, 140, 80, 0.15);
+  border-radius: 1rem;
+}
+
+#ageDisplay p {
+  margin: 0.3rem 0;
+  color: #4a5d3f;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.game-button {
+  background: linear-gradient(135deg, #5a8c50 0%, #4a7540 100%);
+  color: white;
+  border: none;
+  padding: 1.2rem 2.5rem;
+  border-radius: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(90, 140, 80, 0.3);
+  font-family: 'Fredoka', sans-serif;
+}
+
+.game-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(90, 140, 80, 0.5);
+}
+
+.game-button:active {
+  transform: translateY(0);
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.timer {
+  color: #e89043;
+}
+
+.score {
+  color: #5a8c50;
+}
+
+.question-container {
+  text-align: center;
+}
+
+.question-number {
+  font-size: 1rem;
+  color: #6f4f44;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.equation {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #4a5d3f;
+  margin: 2rem 0;
+  min-height: 3rem;
+}
+
+.answer-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.answer-button {
+  background: linear-gradient(135deg, #f0a355 0%, #e89043 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 1.2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(240, 163, 85, 0.3);
+  font-family: 'Fredoka', sans-serif;
+}
+
+.answer-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(240, 163, 85, 0.5);
+}
+
+.answer-button:active {
+  transform: scale(0.95);
+}
+
+.answer-button.correct {
+  background: linear-gradient(135deg, #5a8c50 0%, #4a7540 100%);
+  animation: correctPulse 0.5s ease;
+}
+
+.answer-button.wrong {
+  background: linear-gradient(135deg, #d9534f 0%, #c9302c 100%);
+  animation: wrongShake 0.5s ease;
+}
+
+@keyframes correctPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes wrongShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.result-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.result-container h3 {
+  font-size: 2rem;
+  color: #4a5d3f;
+  margin-bottom: 1.5rem;
+}
+
+.final-score {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #5a8c50;
+  margin: 1.5rem 0;
+}
+
+#resultMessage {
+  font-size: 1.3rem;
+  color: #6f4f44;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .game-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .equation {
+    font-size: 2rem;
+  }
+
+  .answer-button {
+    font-size: 1.3rem;
+    padding: 0.8rem 1.5rem;
+  }
+
+  .final-score {
+    font-size: 3rem;
+  }
+}
+</style>

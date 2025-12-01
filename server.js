@@ -34,7 +34,7 @@ app.get("/extras", (req, res) => {
     title: "Extra's - Hey Owly",
     containerClass: "content",
     content: loadContent("extras-content.html"),
-    scripts: "",
+    scripts: loadContent("extras-scripts.html"),
     headExtra: ""
   });
   res.send(html);
