@@ -57,7 +57,7 @@ GESPREK AFSLUITEN
 }
 
 // Gesprekstype-specifieke instructies
-function getConversationTypeInstructions(type, name) {
+function getConversationTypeInstructions(type, name, age) {
   const instructions = {
     standaard: `
 EDUCATIEVE FOCUS
@@ -180,7 +180,7 @@ SAMENVATTING VAN JE ROL
 export function getOwlyInstructions(name, age, conversationType = 'standaard', topic = '') {
   const grade = getGrade(age);
   const baseInstructions = getBaseInstructions(name, age, grade);
-  const typeInstructions = getConversationTypeInstructions(conversationType, name);
+  const typeInstructions = getConversationTypeInstructions(conversationType, name, age);
 
   // Add topic context for "praatover" type
   let topicContext = '';

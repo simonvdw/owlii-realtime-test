@@ -174,8 +174,7 @@ h1 .owly {
 .conversation-carousel {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
+  justify-content: space-between;
   margin: 1rem 0;
   padding: 0.5rem 1rem;
   background: linear-gradient(135deg, rgba(90, 140, 80, 0.08) 0%, rgba(240, 163, 85, 0.05) 100%);
@@ -272,10 +271,14 @@ h1 .owly {
 .topic-input-container {
   flex: 1;
   min-width: 150px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .topic-input {
-  width: 100%;
+  flex: 1;
   padding: 0.4rem 0.6rem;
   border: 2px solid rgba(90, 140, 80, 0.3);
   border-radius: 0.5rem;
@@ -296,6 +299,34 @@ h1 .owly {
 .topic-input::placeholder {
   color: rgba(111, 79, 68, 0.5);
   font-size: 0.85rem;
+}
+
+.clear-topic-button {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.clear-topic-button:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: scale(1.1);
+}
+
+.clear-topic-button:active {
+  transform: scale(0.95);
 }
 
 .page-title {

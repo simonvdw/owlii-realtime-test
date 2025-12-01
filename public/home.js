@@ -319,21 +319,50 @@ if (carouselRight) {
 
 // Topic input event listener
 const topicInput = document.getElementById('topicInput');
+const clearTopicButton = document.getElementById('clearTopicButton');
+
 if (topicInput) {
+  // Function to toggle clear button visibility
+  function toggleClearButton() {
+    if (clearTopicButton) {
+      if (topicInput.value.trim().length > 0) {
+        clearTopicButton.style.display = 'flex';
+      } else {
+        clearTopicButton.style.display = 'none';
+      }
+    }
+  }
+
   // Load saved topic
   const savedTopic = sessionStorage.getItem('conversationTopic');
   if (savedTopic) {
     topicInput.value = savedTopic;
+    toggleClearButton();
   }
 
-  // Save topic on input
+  // Save topic on input and toggle clear button
   topicInput.addEventListener('input', () => {
     conversationTopic = topicInput.value.trim();
     sessionStorage.setItem('conversationTopic', conversationTopic);
+    toggleClearButton();
   });
 
   // Prevent carousel navigation when clicking in input
   topicInput.addEventListener('click', (e) => {
     e.stopPropagation();
+  });
+}
+
+// Clear topic button event listener
+if (clearTopicButton) {
+  clearTopicButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (topicInput) {
+      topicInput.value = '';
+      conversationTopic = '';
+      sessionStorage.removeItem('conversationTopic');
+      clearTopicButton.style.display = 'none';
+      topicInput.focus();
+    }
   });
 }
