@@ -14,6 +14,7 @@ const logEl = document.getElementById("log");
 let session = null;
 let hasStarted = false;
 let userName = "";
+let userBirthYear = "";
 let tailTimeoutId = null;
 
 function log(message) {
@@ -24,11 +25,12 @@ function log(message) {
 /**
  * OWLY instructies, gecombineerd met extra veiligheidsregels.
  * @param {string} name - De voornaam van het kind
+ * @param {string} birthYear - Het geboortejaar van het kind
  */
-function createOwlyAgent(name) {
+function createOwlyAgent(name, birthYear) {
   return new RealtimeAgent({
     name: "OWLY",
-    instructions: getOwlyInstructions(name),
+    instructions: getOwlyInstructions(name, birthYear),
   });
 }
 
@@ -40,11 +42,13 @@ async function startConversation() {
   if (hasStarted) {
     return;
   }
-  
-  // Valideer voornaam
-  userName = nameInput.value.trim();
-  if (!userName) {
-    statusEl.textContent = "Vul eerst je voornaam in!";
+
+  // Get user data from sessionStorage (set by the form)
+  userName = sessionStorage.getItem('userName') || '';
+  userBirthYear = sessionStorage.getItem('userBirthYear') || '';
+
+  if (!userName || !userBirthYear) {
+    statusEl.textContent = "Vul eerst je gegevens in!";
     return;
   }
 
@@ -53,7 +57,6 @@ async function startConversation() {
   button.disabled = true;
   stopButton.disabled = true;
   pressToTalkButton.disabled = true;
-  nameInput.disabled = true;
 
   statusEl.textContent = "Token ophalen en verbinden...";
   log(`${userName} start gesprek met OWLY...`);
@@ -72,7 +75,7 @@ async function startConversation() {
 
     log("Got ephemeral key. Creating OWLY agent and session.");
 
-    const agent = createOwlyAgent(userName);
+    const agent = createOwlyAgent(userName, userBirthYear);
 
     session = new RealtimeSession(agent, {
       model: "gpt-realtime",
@@ -148,7 +151,6 @@ function stopConversation() {
   pressToTalkButton.disabled = true;
   pressToTalkButton.classList.remove("active");
   pressToTalkButton.classList.remove("tail");
-  nameInput.disabled = false;
 }
 
 /**

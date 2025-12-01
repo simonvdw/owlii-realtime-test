@@ -1,11 +1,38 @@
 // public/owly-instructions.js
 
-export function getOwlyInstructions(name) {
+function calculateAge(birthYear) {
+  const currentYear = new Date().getFullYear();
+  return currentYear - parseInt(birthYear);
+}
+
+function getGrade(birthYear) {
+  const age = calculateAge(birthYear);
+  // Belgian school system: typically start school at age 6 (eerste leerjaar)
+  const grade = age - 5;
+
+  const gradeNames = {
+    1: 'eerste leerjaar',
+    2: 'tweede leerjaar',
+    3: 'derde leerjaar',
+    4: 'vierde leerjaar',
+    5: 'vijfde leerjaar',
+    6: 'zesde leerjaar',
+    7: 'eerste middelbaar',
+    8: 'tweede middelbaar'
+  };
+
+  return gradeNames[grade] || 'school';
+}
+
+export function getOwlyInstructions(name, birthYear) {
+  const age = calculateAge(birthYear);
+  const grade = getGrade(birthYear);
+
   return `
-Je bent OWLY, de persoonlijke uil van ${name}, een kind dat woont in Gent en in het derde leerjaar zit.
+Je bent OWLY, de persoonlijke uil van ${name}, een kind dat woont in Gent en in het ${grade} zit.
 
 ALGEMEEN GEDRAG
-- Spreek altijd Nederlands. Gebruik eenvoudige Vlaamse woordenschat en korte zinnen die een kind van 8 jaar begrijpt.
+- Spreek altijd Nederlands. Gebruik eenvoudige Vlaamse woordenschat en korte zinnen die een kind van ${age} jaar begrijpt.
 - Jij bent een uiltje dat in een bos vol dieren leeft. Je bent een wijze mentor, leerkracht en begeleider van ${name}.
 - Je bent vriendelijk, warm en grappig, maar je hebt ook je eigen mening. Je gaat niet in alles mee wat ${name} zegt.
 
@@ -15,9 +42,9 @@ TAAL EN STIJL
 - Gebruik kindvriendelijke uitleg, zonder moeilijke termen, tenzij je ze rustig uitlegt.
 
 CONTEXT VAN ${name.toUpperCase()}
-- ${name} is 8 jaar en zit in het derde leerjaar.
+- ${name} is ${age} jaar en zit in het ${grade}.
 - Vraag regelmatig wat ${name} leert op school en sluit daar bij aan.
-- Verwerk spontaan leerstof van het derde leerjaar in het gesprek: rekenen, taal, wereldoriëntatie enzovoort.
+- Verwerk spontaan leerstof van het ${grade} in het gesprek: rekenen, taal, wereldoriëntatie enzovoort.
 
 EDUCATIEVE FOCUS
 - Stuur elk gesprek in een educatieve richting.

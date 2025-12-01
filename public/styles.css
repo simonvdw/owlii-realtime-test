@@ -34,22 +34,24 @@ header {
   top: 0.5rem;
   right: 0.75rem;
   font-size: 0.7rem;
-  color: rgba(111, 79, 68, 0.6);
+  color: #9333ea;
   text-decoration: none;
-  font-weight: 400;
+  font-weight: 500;
   z-index: 100;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .original-link:hover {
-  color: #6f4f44;
+  color: #7e22ce;
+  text-decoration: underline;
 }
 
 /* Mini nav inside container */
 .mini-nav {
   position: absolute;
   top: 0.75rem;
-  left: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 0.75rem;
   font-size: 0.7rem;
@@ -146,7 +148,7 @@ label {
   font-weight: 600;
 }
 
-input {
+input, select {
   width: 100%;
   padding: 0.875rem 1.25rem;
   font-size: 1rem;
@@ -158,10 +160,19 @@ input {
   transition: all 0.3s ease;
 }
 
-input:focus {
+input:focus, select:focus {
   outline: none;
   border-color: #5a8c50;
   box-shadow: 0 0 0 4px rgba(90, 140, 80, 0.2);
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f0a355' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
 }
 
 .hint {
@@ -404,6 +415,10 @@ button:active {
   }
 
   .original-link {
+    font-size: 0.65rem;
+  }
+
+  .mini-nav {
     font-size: 0.65rem;
   }
 }
