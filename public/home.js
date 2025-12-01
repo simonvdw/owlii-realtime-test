@@ -272,6 +272,115 @@ if (savedType) {
   }
 }
 
+// Topic input initialization
+let topicInputInitialized = false;
+
+function initializeTopicInput() {
+  // Prevent multiple initializations
+  if (topicInputInitialized) {
+    return;
+  }
+
+  const topicInput = document.getElementById('topicInput');
+  const clearTopicButton = document.getElementById('clearTopicButton');
+  const topicInputContainer = document.querySelector('.topic-input-container');
+  const topicBadgeContainer = document.querySelector('.topic-badge-container');
+  const topicBadgeText = document.getElementById('topicBadgeText');
+  const removeBadgeButton = document.getElementById('removeBadgeButton');
+
+  if (!topicInput) {
+    return;
+  }
+
+  topicInputInitialized = true;
+
+  // Function to show badge mode
+  function showBadgeMode(topic) {
+    if (topicInputContainer && topicBadgeContainer && topicBadgeText) {
+      topicInputContainer.style.display = 'none';
+      topicBadgeContainer.style.display = 'block';
+      topicBadgeText.textContent = topic;
+    }
+  }
+
+  // Function to show input mode
+  function showInputMode() {
+    if (topicInputContainer && topicBadgeContainer) {
+      topicInputContainer.style.display = 'flex';
+      topicBadgeContainer.style.display = 'none';
+      topicInput.focus();
+    }
+  }
+
+  // Function to toggle clear button visibility
+  function toggleClearButton() {
+    if (clearTopicButton) {
+      if (topicInput.value.trim().length > 0) {
+        clearTopicButton.style.display = 'flex';
+      } else {
+        clearTopicButton.style.display = 'none';
+      }
+    }
+  }
+
+  // Load saved topic and show as badge if exists
+  const savedTopic = sessionStorage.getItem('conversationTopic');
+  if (savedTopic) {
+    topicInput.value = savedTopic;
+    conversationTopic = savedTopic;
+    showBadgeMode(savedTopic);
+  }
+
+  // Save topic on input and toggle clear button
+  topicInput.addEventListener('input', () => {
+    conversationTopic = topicInput.value.trim();
+    sessionStorage.setItem('conversationTopic', conversationTopic);
+    console.log('Topic saved to sessionStorage:', conversationTopic);
+    toggleClearButton();
+  });
+
+  // Enter key to confirm and show badge
+  topicInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const topic = topicInput.value.trim();
+      if (topic) {
+        conversationTopic = topic;
+        sessionStorage.setItem('conversationTopic', topic);
+        showBadgeMode(topic);
+      }
+    }
+  });
+
+  // Prevent carousel navigation when clicking in input
+  topicInput.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  // Clear topic button event listener
+  if (clearTopicButton) {
+    clearTopicButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      topicInput.value = '';
+      conversationTopic = '';
+      sessionStorage.removeItem('conversationTopic');
+      clearTopicButton.style.display = 'none';
+      topicInput.focus();
+    });
+  }
+
+  // Remove badge button event listener
+  if (removeBadgeButton) {
+    removeBadgeButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      topicInput.value = '';
+      conversationTopic = '';
+      sessionStorage.removeItem('conversationTopic');
+      showInputMode();
+    });
+  }
+}
+
 function updateCarousel() {
   const allTypes = document.querySelectorAll('.conversation-type');
   allTypes.forEach((typeEl, index) => {
@@ -286,13 +395,9 @@ function updateCarousel() {
   conversationType = conversationTypes[currentTypeIndex];
   sessionStorage.setItem('conversationType', conversationType);
 
-  // Save topic if praatover type is active
+  // Initialize topic input when praatover type becomes active
   if (conversationType === 'praatover') {
-    const topicInput = document.getElementById('topicInput');
-    if (topicInput) {
-      conversationTopic = topicInput.value.trim();
-      sessionStorage.setItem('conversationTopic', conversationTopic);
-    }
+    initializeTopicInput();
   }
 }
 
@@ -317,52 +422,8 @@ if (carouselRight) {
   });
 }
 
-// Topic input event listener
-const topicInput = document.getElementById('topicInput');
-const clearTopicButton = document.getElementById('clearTopicButton');
-
-if (topicInput) {
-  // Function to toggle clear button visibility
-  function toggleClearButton() {
-    if (clearTopicButton) {
-      if (topicInput.value.trim().length > 0) {
-        clearTopicButton.style.display = 'flex';
-      } else {
-        clearTopicButton.style.display = 'none';
-      }
-    }
-  }
-
-  // Load saved topic
-  const savedTopic = sessionStorage.getItem('conversationTopic');
-  if (savedTopic) {
-    topicInput.value = savedTopic;
-    toggleClearButton();
-  }
-
-  // Save topic on input and toggle clear button
-  topicInput.addEventListener('input', () => {
-    conversationTopic = topicInput.value.trim();
-    sessionStorage.setItem('conversationTopic', conversationTopic);
-    toggleClearButton();
-  });
-
-  // Prevent carousel navigation when clicking in input
-  topicInput.addEventListener('click', (e) => {
-    e.stopPropagation();
-  });
-}
-
-// Clear topic button event listener
-if (clearTopicButton) {
-  clearTopicButton.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (topicInput) {
-      topicInput.value = '';
-      conversationTopic = '';
-      sessionStorage.removeItem('conversationTopic');
-      clearTopicButton.style.display = 'none';
-      topicInput.focus();
-    }
-  });
+// Initialize topic input if praatover is already selected
+if (conversationTypes[currentTypeIndex] === 'praatover') {
+  // Use setTimeout to ensure DOM is ready
+  setTimeout(initializeTopicInput, 0);
 }

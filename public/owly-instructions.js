@@ -190,7 +190,7 @@ export function getOwlyInstructions(name, age, conversationType = 'standaard', t
 HET GEKOZEN ONDERWERP
 ${name} wil graag praten over: "${topic}"
 
-Gebruik dit onderwerp als basis voor het gesprek. Controleer eerst of het onderwerp geschikt is voor kinderen voordat je erover praat.`;
+Gebruik dit onderwerp als basis voor het gesprek. Controleer eerst of het onderwerp geschikt is voor kinderen voordat je erover praat, en indien niet zeg expliciet sorry en dat je daar niet over kan pratne.`;
   }
 
   return `${baseInstructions}
