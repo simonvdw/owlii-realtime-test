@@ -26,17 +26,26 @@ const HighScores = (function() {
     }
   }
 
+  // Format date as dd/mm/yy
+  function formatDate(date) {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = String(d.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
+  }
+
   // Add a new score
   function addScore(gameName, playerName, score, timeUsed) {
     const scores = getAllScores();
-    
+
     const newScore = {
       game: gameName,
       player: playerName,
       score: score,
       timeUsed: timeUsed,
       timestamp: new Date().toISOString(),
-      date: new Date().toLocaleDateString('nl-NL')
+      date: formatDate(new Date())
     };
 
     scores.push(newScore);
@@ -104,6 +113,8 @@ const HighScores = (function() {
 
     scores.forEach((score, index) => {
       const gameEmoji = score.game === 'Reken Maar' ? '🧮' : '🐾';
+      // Fallback: if date is missing, generate it from timestamp
+      const displayDate = score.date || (score.timestamp ? formatDate(score.timestamp) : '-');
       html += `
         <tr>
           <td class="rank">${index + 1}</td>
@@ -111,7 +122,7 @@ const HighScores = (function() {
           <td class="player">${score.player}</td>
           <td class="score">${score.score}/10</td>
           <td class="time">${formatTime(score.timeUsed)}</td>
-          <td class="date">${score.date}</td>
+          <td class="date">${displayDate}</td>
         </tr>
       `;
     });
