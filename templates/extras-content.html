@@ -97,6 +97,11 @@
   </div>
 </div>
 
+<!-- High Scores Section -->
+<div id="highScoresContainer" class="highscores-section">
+  <!-- High scores will be rendered here by JavaScript -->
+</div>
+
 <style>
 .game-container {
   margin-top: 2rem;
@@ -408,6 +413,124 @@
 
   .animal-sound-prompt p {
     font-size: 1rem;
+  }
+}
+
+/* High Scores Section */
+.highscores-section {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(90, 140, 80, 0.08) 0%, rgba(240, 163, 85, 0.05) 100%);
+  border-radius: 1.5rem;
+  border: 2px solid rgba(90, 140, 80, 0.2);
+}
+
+.highscores-section h2 {
+  font-size: 2rem;
+  color: #4a5d3f;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.no-scores {
+  text-align: center;
+  padding: 2rem;
+  color: #6f4f44;
+  font-size: 1.1rem;
+}
+
+.highscores-table-wrapper {
+  overflow-x: auto;
+}
+
+.highscores-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.highscores-table thead {
+  background: linear-gradient(135deg, #5a8c50 0%, #4a7540 100%);
+  color: white;
+}
+
+.highscores-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.highscores-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(90, 140, 80, 0.1);
+  color: #4a5d3f;
+}
+
+.highscores-table tbody tr:hover {
+  background: rgba(90, 140, 80, 0.05);
+}
+
+.highscores-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.highscores-table .rank {
+  font-weight: 700;
+  color: #5a8c50;
+  width: 50px;
+  text-align: center;
+}
+
+.highscores-table .game {
+  font-weight: 600;
+}
+
+.highscores-table .player {
+  font-weight: 600;
+  color: #6f4f44;
+}
+
+.highscores-table .score {
+  font-weight: 700;
+  color: #5a8c50;
+  font-size: 1.1rem;
+}
+
+.highscores-table .time {
+  color: #e89043;
+  font-weight: 600;
+}
+
+.highscores-table .date {
+  color: #8b7355;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .highscores-section {
+    padding: 1.5rem 1rem;
+  }
+
+  .highscores-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .highscores-table th,
+  .highscores-table td {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .highscores-table .rank {
+    width: 35px;
+  }
+
+  .highscores-table .date {
+    display: none;
   }
 }
 </style>

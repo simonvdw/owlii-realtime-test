@@ -21,6 +21,7 @@
   let timerInterval = null;
   let currentAudio = null;
   let correctAnimal = '';
+  let startTime = 0;
 
   // Animal data with sounds
   const animals = [
@@ -71,6 +72,7 @@
     currentRound = 0;
     score = 0;
     timeLeft = 60;
+    startTime = Date.now();
 
     // Switch to game screen
     document.getElementById('animalGameStart').classList.remove('active');
@@ -189,6 +191,16 @@
   // End game
   function endAnimalGame() {
     clearInterval(timerInterval);
+
+    // Calculate time used
+    const timeUsed = Math.floor((Date.now() - startTime) / 1000);
+
+    // Save high score
+    const savedName = getCookie('owlyUserName');
+    if (savedName && typeof HighScores !== 'undefined') {
+      HighScores.addScore('Dierengeluiden', savedName, score, timeUsed);
+      HighScores.renderHighScoresTable();
+    }
 
     // Stop any playing audio
     if (currentAudio) {

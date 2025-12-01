@@ -24,6 +24,7 @@ let timeLeft = 60;
 let timerInterval = null;
 let questions = [];
 let correctAnswer = 0;
+let startTime = 0;
 
 // Get difficulty based on age
 function getDifficulty(age) {
@@ -134,22 +135,23 @@ function startGame() {
   currentQuestion = 0;
   score = 0;
   timeLeft = 60;
-  
+  startTime = Date.now();
+
   const difficulty = getDifficulty(window.gameAge);
   questions = [];
-  
+
   // Generate 10 questions
   for (let i = 0; i < 10; i++) {
     questions.push(generateQuestion(difficulty));
   }
-  
+
   // Switch to game screen
   document.getElementById('gameStart').classList.remove('active');
   document.getElementById('gamePlay').classList.add('active');
-  
+
   // Start timer
   startTimer();
-  
+
   // Show first question
   showQuestion();
 }
@@ -233,6 +235,16 @@ function checkAnswer(selectedAnswer) {
 // End game
 function endGame() {
   clearInterval(timerInterval);
+
+  // Calculate time used
+  const timeUsed = Math.floor((Date.now() - startTime) / 1000);
+
+  // Save high score
+  const savedName = getCookie('owlyUserName');
+  if (savedName && typeof HighScores !== 'undefined') {
+    HighScores.addScore('Reken Maar', savedName, score, timeUsed);
+    HighScores.renderHighScoresTable();
+  }
 
   // Switch to end screen
   document.getElementById('gamePlay').classList.remove('active');
