@@ -18,6 +18,7 @@ let hasStarted = false;
 let userName = "";
 let userAge = "";
 let conversationType = "standaard";
+let conversationTopic = "";
 let tailTimeoutId = null;
 
 function log(message) {
@@ -34,12 +35,13 @@ function log(message) {
  * OWLY instructies, gecombineerd met extra veiligheidsregels.
  * @param {string} name - De voornaam van het kind
  * @param {number} age - De leeftijd van het kind
- * @param {string} type - Het gesprekstype (standaard, verhaaltjes, raadsels, mopjes)
+ * @param {string} type - Het gesprekstype (standaard, verhaaltjes, raadsels, mopjes, praatover)
+ * @param {string} topic - Het onderwerp voor "praat over" type (optioneel)
  */
-function createOwlyAgent(name, age, type) {
+function createOwlyAgent(name, age, type, topic = "") {
   return new RealtimeAgent({
     name: "OWLY",
-    instructions: getOwlyInstructions(name, age, type),
+    instructions: getOwlyInstructions(name, age, type, topic),
   });
 }
 
@@ -56,9 +58,16 @@ async function startConversation() {
   userName = sessionStorage.getItem('userName') || '';
   userAge = sessionStorage.getItem('userAge') || '';
   conversationType = sessionStorage.getItem('conversationType') || 'standaard';
+  conversationTopic = sessionStorage.getItem('conversationTopic') || '';
 
   if (!userName || !userAge) {
     statusEl.textContent = "Vul eerst je gegevens in!";
+    return;
+  }
+
+  // Validate topic for "praatover" type
+  if (conversationType === 'praatover' && !conversationTopic.trim()) {
+    statusEl.textContent = "Vul eerst een onderwerp in!";
     return;
   }
 
@@ -85,7 +94,7 @@ async function startConversation() {
 
     log("Got ephemeral key. Creating OWLY agent and session.");
 
-    const agent = createOwlyAgent(userName, userAge, conversationType);
+    const agent = createOwlyAgent(userName, userAge, conversationType, conversationTopic);
 
     session = new RealtimeSession(agent, {
       model: "gpt-realtime",
@@ -251,7 +260,7 @@ stopButton.addEventListener("click", () => {
 });
 
 // Conversation Type Carousel Logic
-const conversationTypes = ['standaard', 'verhaaltjes', 'raadsels', 'mopjes'];
+const conversationTypes = ['standaard', 'verhaaltjes', 'raadsels', 'mopjes', 'praatover'];
 let currentTypeIndex = 0;
 
 // Initialize carousel from sessionStorage
@@ -276,6 +285,15 @@ function updateCarousel() {
   // Save to sessionStorage
   conversationType = conversationTypes[currentTypeIndex];
   sessionStorage.setItem('conversationType', conversationType);
+
+  // Save topic if praatover type is active
+  if (conversationType === 'praatover') {
+    const topicInput = document.getElementById('topicInput');
+    if (topicInput) {
+      conversationTopic = topicInput.value.trim();
+      sessionStorage.setItem('conversationTopic', conversationTopic);
+    }
+  }
 }
 
 // Initialize carousel display
@@ -296,5 +314,26 @@ if (carouselRight) {
   carouselRight.addEventListener('click', () => {
     currentTypeIndex = (currentTypeIndex + 1) % conversationTypes.length;
     updateCarousel();
+  });
+}
+
+// Topic input event listener
+const topicInput = document.getElementById('topicInput');
+if (topicInput) {
+  // Load saved topic
+  const savedTopic = sessionStorage.getItem('conversationTopic');
+  if (savedTopic) {
+    topicInput.value = savedTopic;
+  }
+
+  // Save topic on input
+  topicInput.addEventListener('input', () => {
+    conversationTopic = topicInput.value.trim();
+    sessionStorage.setItem('conversationTopic', conversationTopic);
+  });
+
+  // Prevent carousel navigation when clicking in input
+  topicInput.addEventListener('click', (e) => {
+    e.stopPropagation();
   });
 }

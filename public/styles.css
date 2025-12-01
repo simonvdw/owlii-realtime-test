@@ -251,6 +251,53 @@ h1 .owly {
   white-space: nowrap;
 }
 
+/* Topic input styling for "Praat over ..." conversation type */
+.conversation-type[data-type="praatover"] {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  min-width: 200px;
+  flex-wrap: wrap;
+}
+
+.conversation-type[data-type="praatover"] .type-icon {
+  flex-shrink: 0;
+}
+
+.conversation-type[data-type="praatover"] .type-name {
+  flex-shrink: 0;
+}
+
+.topic-input-container {
+  flex: 1;
+  min-width: 150px;
+}
+
+.topic-input {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border: 2px solid rgba(90, 140, 80, 0.3);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background: white;
+  color: #6f4f44;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.topic-input:focus {
+  outline: none;
+  border-color: rgba(240, 163, 85, 0.6);
+  box-shadow: 0 0 0 3px rgba(240, 163, 85, 0.1);
+}
+
+.topic-input::placeholder {
+  color: rgba(111, 79, 68, 0.5);
+  font-size: 0.85rem;
+}
+
 .page-title {
   font-size: 1.8rem;
   color: #6f4f44;
