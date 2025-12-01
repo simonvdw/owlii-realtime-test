@@ -180,6 +180,12 @@ h1 .owly {
   background: linear-gradient(135deg, rgba(90, 140, 80, 0.08) 0%, rgba(240, 163, 85, 0.05) 100%);
   border-radius: 1rem;
   border: 2px solid rgba(90, 140, 80, 0.2);
+  transition: opacity 0.3s ease;
+}
+
+.conversation-carousel.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .carousel-arrow {
@@ -208,6 +214,12 @@ h1 .owly {
 
 .carousel-arrow:active {
   transform: scale(0.95);
+}
+
+.carousel-arrow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .carousel-content {
@@ -296,6 +308,12 @@ h1 .owly {
   box-shadow: 0 0 0 3px rgba(240, 163, 85, 0.1);
 }
 
+.topic-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(0, 0, 0, 0.05);
+}
+
 .topic-input::placeholder {
   color: rgba(111, 79, 68, 0.5);
   font-size: 0.85rem;
@@ -327,6 +345,12 @@ h1 .owly {
 
 .clear-topic-button:active {
   transform: scale(0.95);
+}
+
+.clear-topic-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .topic-badge-container {
@@ -382,6 +406,12 @@ h1 .owly {
 
 .remove-badge-button:active {
   transform: scale(0.95);
+}
+
+.remove-badge-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .page-title {

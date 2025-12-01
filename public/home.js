@@ -122,6 +122,9 @@ async function startConversation() {
     pushToTalkContainer.style.display = "block";
     pressToTalkButton.disabled = false;
 
+    // Disable conversation type controls during active call
+    setConversationControlsEnabled(false);
+
     log("Connected. Push to talk is actief.");
   } catch (err) {
     console.error(err);
@@ -134,6 +137,9 @@ async function startConversation() {
     pushToTalkContainer.style.display = "none";
     pressToTalkButton.disabled = true;
     nameInput.disabled = false;
+
+    // Re-enable conversation type controls on error
+    setConversationControlsEnabled(true);
   }
 }
 
@@ -177,6 +183,9 @@ function stopConversation() {
   pressToTalkButton.disabled = true;
   pressToTalkButton.classList.remove("active");
   pressToTalkButton.classList.remove("tail");
+
+  // Re-enable conversation type controls after call ends
+  setConversationControlsEnabled(true);
 }
 
 /**
@@ -262,6 +271,38 @@ stopButton.addEventListener("click", () => {
 // Conversation Type Carousel Logic
 const conversationTypes = ['standaard', 'verhaaltjes', 'raadsels', 'mopjes', 'praatover'];
 let currentTypeIndex = 0;
+
+// Function to disable/enable conversation type controls
+function setConversationControlsEnabled(enabled) {
+  const carousel = document.getElementById('conversationTypeCarousel');
+  const carouselLeft = document.getElementById('carouselLeft');
+  const carouselRight = document.getElementById('carouselRight');
+  const topicInput = document.getElementById('topicInput');
+  const clearTopicButton = document.getElementById('clearTopicButton');
+  const removeBadgeButton = document.getElementById('removeBadgeButton');
+
+  if (enabled) {
+    // Enable carousel
+    if (carousel) carousel.classList.remove('disabled');
+    if (carouselLeft) carouselLeft.disabled = false;
+    if (carouselRight) carouselRight.disabled = false;
+
+    // Enable topic controls
+    if (topicInput) topicInput.disabled = false;
+    if (clearTopicButton) clearTopicButton.disabled = false;
+    if (removeBadgeButton) removeBadgeButton.disabled = false;
+  } else {
+    // Disable carousel
+    if (carousel) carousel.classList.add('disabled');
+    if (carouselLeft) carouselLeft.disabled = true;
+    if (carouselRight) carouselRight.disabled = true;
+
+    // Disable topic controls
+    if (topicInput) topicInput.disabled = true;
+    if (clearTopicButton) clearTopicButton.disabled = true;
+    if (removeBadgeButton) removeBadgeButton.disabled = true;
+  }
+}
 
 // Initialize carousel from sessionStorage
 const savedType = sessionStorage.getItem('conversationType');
