@@ -10,7 +10,7 @@
 
 <div id="userInfoDisplay">
   <div class="user-greeting">Hoi <span id="displayName"></span>! 👋</div>
-  <div class="user-age">Je bent <span id="displayAge"></span> jaar oud</div>
+  <div class="user-age">Je bent of wordt <span id="displayAge"></span> jaar oud</div>
   <button class="edit-button" onclick="editUserInfo()">✏️ Gegevens aanpassen</button>
 </div>
 
@@ -58,10 +58,10 @@
 
   <div class="chat-buttons">
     <button id="talkButton">Start gesprek</button>
-    <button id="stopButton" disabled>Stop gesprek</button>
+    <button id="stopButton" style="display: none;">Stop gesprek</button>
   </div>
 
-  <div style="margin: 2rem 0;">
+  <div id="pushToTalkContainer" style="margin: 2rem 0; display: none;">
     <button id="pressToTalkButton" disabled aria-label="Houd ingedrukt om te praten">
       <svg class="wave-icon" viewBox="0 0 120 120" role="img" aria-hidden="true">
         <rect x="18" y="30" width="14" height="60" rx="7"></rect>

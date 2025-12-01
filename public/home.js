@@ -6,6 +6,7 @@ import { getOwlyInstructions } from "./owly-instructions.js";
 const button = document.getElementById("talkButton");          // Start gesprek
 const stopButton = document.getElementById("stopButton");      // Stop gesprek
 const pressToTalkButton = document.getElementById("pressToTalkButton"); // Talk ingedrukt houden
+const pushToTalkContainer = document.getElementById("pushToTalkContainer"); // Container voor push-to-talk
 const nameInput = document.getElementById("nameInput");        // Voornaam input
 
 const statusEl = document.getElementById("status");
@@ -97,9 +98,10 @@ async function startConversation() {
 
     statusEl.textContent =
       "Verbonden met OWLY. Gebruik de TALK knop om te praten.";
-    button.textContent = "Verbonden";
-    button.disabled = true;
+    button.style.display = "none";
+    stopButton.style.display = "inline-block";
     stopButton.disabled = false;
+    pushToTalkContainer.style.display = "block";
     pressToTalkButton.disabled = false;
 
     log("Connected. Push to talk is actief.");
@@ -107,8 +109,11 @@ async function startConversation() {
     console.error(err);
     statusEl.textContent = "Kon niet verbinden. Zie console voor details.";
     hasStarted = false;
+    button.style.display = "inline-block";
     button.disabled = false;
+    stopButton.style.display = "none";
     stopButton.disabled = true;
+    pushToTalkContainer.style.display = "none";
     pressToTalkButton.disabled = true;
     nameInput.disabled = false;
   }
@@ -145,9 +150,12 @@ function stopConversation() {
   hasStarted = false;
 
   statusEl.textContent = "Gesprek gestopt. Je kan opnieuw starten.";
+  button.style.display = "inline-block";
   button.disabled = false;
   button.textContent = "Start gesprek";
+  stopButton.style.display = "none";
   stopButton.disabled = true;
+  pushToTalkContainer.style.display = "none";
   pressToTalkButton.disabled = true;
   pressToTalkButton.classList.remove("active");
   pressToTalkButton.classList.remove("tail");
@@ -212,12 +220,14 @@ window.addEventListener("touchend", stopTalking);
 // Spacebar support voor de TALK knop
 window.addEventListener("keydown", (event) => {
   if (event.code === "Space" && !event.repeat) {
+    event.preventDefault(); // Prevent page scrolling
     startTalking(event);
   }
 });
 
 window.addEventListener("keyup", (event) => {
   if (event.code === "Space") {
+    event.preventDefault(); // Prevent page scrolling
     stopTalking();
   }
 });
