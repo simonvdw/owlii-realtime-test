@@ -198,7 +198,7 @@ function checkAnswer(selectedAnswer) {
   const isCorrect = selectedAnswer === correctAnswer;
 
   // Play sound effect
-  const soundEffect = new Audio(isCorrect ? 'rekenmaar-succes.mp3' : 'rekenmaar-fail.mp3');
+  const soundEffect = new Audio(isCorrect ? 'assets/rekenmaar-succes.mp3' : 'assets/rekenmaar-fail.mp3');
   soundEffect.play().catch(err => console.log('Audio play failed:', err));
 
   // Disable all buttons

@@ -391,6 +391,10 @@ function initializeTopicInput() {
         showBadgeMode(topic);
       }
     }
+    // Allow spaces in input by preventing event propagation
+    if (e.key === ' ' || e.code === 'Space') {
+      e.stopPropagation();
+    }
   });
 
   // Prevent carousel navigation when clicking in input

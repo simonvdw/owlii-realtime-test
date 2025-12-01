@@ -25,12 +25,12 @@
 
   // Animal data with sounds
   const animals = [
-    { name: 'eend', emoji: '🦆', sound: 'dierengeluid-eend.mp3' },
-    { name: 'geit', emoji: '🐐', sound: 'dierengeluid-geit.mp3' },
-    { name: 'hond', emoji: '🐕', sound: 'dierengeluid-hond.mp3' },
-    { name: 'kat', emoji: '🐈', sound: 'dierengeluid-kat.mp3' },
-    { name: 'kip', emoji: '🐔', sound: 'dierengeluid-kip.mp3' },
-    { name: 'paard', emoji: '🐴', sound: 'dierengeluid-paard.mp3' }
+    { name: 'eend', emoji: '🦆', sound: 'assets/dierengeluid-eend.mp3' },
+    { name: 'geit', emoji: '🐐', sound: 'assets/dierengeluid-geit.mp3' },
+    { name: 'hond', emoji: '🐕', sound: 'assets/dierengeluid-hond.mp3' },
+    { name: 'kat', emoji: '🐈', sound: 'assets/dierengeluid-kat.mp3' },
+    { name: 'kip', emoji: '🐔', sound: 'assets/dierengeluid-kip.mp3' },
+    { name: 'paard', emoji: '🐴', sound: 'assets/dierengeluid-paard.mp3' }
   ];
 
   // Shuffle array
