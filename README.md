@@ -2,6 +2,22 @@
 
 Een minimal OpenAI Realtime API test applicatie voor **OWLY**, een Nederlands-sprekende educatieve AI-assistent voor kinderen. OWLY is een wijze uil die kinderen helpt leren via real-time voice gesprekken.
 
+
+---
+
+## 🎨 Wouter changes Dec 1st
+
+Sorry Simon konnet nie laten :) + test of ik ook local dev en deploys aan de praat kreeg etc + Feel free to revert everything!
+
+**Changes:**
+- 🎉 Yay multiple developers doing local dev and collaborating and pushing changes etc etc (audio werkt bij mij wel nie lokaal, hopelijk gewoon door mijn OpenAPI key of zo)
+- 🎨 Introduced some first branding design because 'brand + domain' is just more fun even while still exploring
+- 🧩 Some basic templating and reused styles etc
+- 🎮 Eerste 'extras' spelletje (Reken Maar!) en 'over ons' pagina
+- 🔧 Kept original file, hopelijk niks gebroken enkel toegevoegd
+
+---
+
 ## ✨ Functionaliteiten
 
 - 🎙️ **Real-time voice interactie** via OpenAI Realtime API
