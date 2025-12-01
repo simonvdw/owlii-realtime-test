@@ -34,16 +34,20 @@ header {
   top: 0.5rem;
   right: 0.75rem;
   font-size: 0.7rem;
-  color: #9333ea;
+  color: #e0e7ff;
+  background: #1e3a8a;
   text-decoration: none;
   font-weight: 500;
   z-index: 100;
   transition: all 0.3s ease;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .original-link:hover {
-  color: #7e22ce;
-  text-decoration: underline;
+  background: #1e40af;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Mini nav inside container */

@@ -2,13 +2,27 @@
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
+const { renderTemplate } = require("./utils/template");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Helper to load content file
+function loadContent(filename) {
+  return fs.readFileSync(path.join(__dirname, "templates", filename), "utf-8");
+}
+
 // Routes for different pages (BEFORE static middleware)
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  const html = renderTemplate("base", {
+    title: "Hey Owly - Leer en Speel met OWLY",
+    containerClass: "hero",
+    content: loadContent("home-content.html"),
+    scripts: loadContent("home-scripts.html"),
+    headExtra: ""
+  });
+  res.send(html);
 });
 
 app.get("/original", (req, res) => {
@@ -16,11 +30,25 @@ app.get("/original", (req, res) => {
 });
 
 app.get("/extras", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "extras.html"));
+  const html = renderTemplate("base", {
+    title: "Extra's - Hey Owly",
+    containerClass: "content",
+    content: loadContent("extras-content.html"),
+    scripts: "",
+    headExtra: ""
+  });
+  res.send(html);
 });
 
 app.get("/over-ons", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "over-ons.html"));
+  const html = renderTemplate("base", {
+    title: "Over Ons - Hey Owly",
+    containerClass: "content",
+    content: loadContent("over-ons-content.html"),
+    scripts: "",
+    headExtra: ""
+  });
+  res.send(html);
 });
 
 // Simple health check

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <title>{!title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    {!headExtra}
+  </head>
+  <body>
+    <a href="/original" class="original-link">
+      Originele test pagina →
+    </a>
+
+    <main>
+      <div class="{!containerClass}">
+        <nav class="mini-nav">
+          <a href="/">Home</a>
+          <a href="/extras">Extra's</a>
+          <a href="/over-ons">Over</a>
+        </nav>
+
+        {!content}
+      </div>
+    </main>
+
+    {!scripts}
+  </body>
+</html>
+

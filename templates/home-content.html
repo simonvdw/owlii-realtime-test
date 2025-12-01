@@ -1,0 +1,90 @@
+<div class="owl-image">
+  <img src="owly.png" alt="OWLY de wijze uil">
+</div>
+
+<h1>
+  <span class="hey">Hey</span> <span class="owly">Owly</span>
+</h1>
+
+<p class="subtitle">Leer en speel met OWLY, jouw slimme uilvriend! 🦉</p>
+
+<div id="userInfoDisplay">
+  <div class="user-greeting">Hoi <span id="displayName"></span>! 👋</div>
+  <div class="user-age">Je bent <span id="displayAge"></span> jaar oud</div>
+  <button class="edit-button" onclick="editUserInfo()">✏️ Gegevens aanpassen</button>
+</div>
+
+<div id="welcomeForm">
+  <form id="startForm">
+    <div class="form-group">
+      <label for="nameInput">Wat is je voornaam?</label>
+      <input
+        type="text"
+        id="nameInput"
+        placeholder="Jouw voornaam"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="birthYearInput">Wat is je geboortejaar?</label>
+      <select id="birthYearInput" required>
+        <option value="">Kies je geboortejaar</option>
+        <option value="2028">2028</option>
+        <option value="2027">2027</option>
+        <option value="2026">2026</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+        <option value="2021">2021</option>
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+        <option value="2018">2018</option>
+        <option value="2017">2017</option>
+        <option value="2016">2016</option>
+        <option value="2015">2015</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="betaCodeInput">Beta code</label>
+      <input
+        type="text"
+        id="betaCodeInput"
+        placeholder="Voer je code in"
+        required
+      />
+      <p class="hint">Tip: gebruik gewoon "BETA"</p>
+    </div>
+
+    <button type="submit">Start je avontuur met OWLY! 🚀</button>
+  </form>
+</div>
+
+<div id="chatInterface">
+  <p id="status">Nog niet verbonden.</p>
+
+  <div class="chat-buttons">
+    <button id="talkButton">Start gesprek</button>
+    <button id="stopButton" disabled>Stop gesprek</button>
+  </div>
+
+  <div style="margin: 2rem 0;">
+    <button id="pressToTalkButton" disabled aria-label="Houd ingedrukt om te praten">
+      <svg class="wave-icon" viewBox="0 0 120 120" role="img" aria-hidden="true">
+        <rect x="18" y="30" width="14" height="60" rx="7"></rect>
+        <rect x="38" y="18" width="14" height="84" rx="7"></rect>
+        <rect x="58" y="8" width="14" height="104" rx="7"></rect>
+        <rect x="78" y="18" width="14" height="84" rx="7"></rect>
+        <rect x="98" y="30" width="14" height="60" rx="7"></rect>
+      </svg>
+    </button>
+    <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7; color: #6f4f44;">
+      Houd ingedrukt om te praten (of gebruik spatiebalk)
+    </p>
+  </div>
+
+  <div id="log"></div>
+</div>
+
