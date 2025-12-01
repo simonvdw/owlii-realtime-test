@@ -48,23 +48,14 @@
     const savedName = getCookie('owlyUserName');
     const savedBirthYear = getCookie('owlyUserBirthYear');
 
-    const ageWarning = document.getElementById('animalAgeWarning');
-    const ageDisplay = document.getElementById('animalAgeDisplay');
     const startButton = document.getElementById('animalStartButton');
 
     if (!savedName || !savedBirthYear) {
-      ageWarning.style.display = 'block';
       startButton.disabled = true;
       startButton.style.opacity = '0.5';
       startButton.style.cursor = 'not-allowed';
       return;
     }
-
-    const currentYear = new Date().getFullYear();
-    const age = currentYear - parseInt(savedBirthYear);
-    document.getElementById('animalPlayerName').textContent = savedName;
-    document.getElementById('animalPlayerAge').textContent = age;
-    ageDisplay.style.display = 'block';
   }
 
   // Start game

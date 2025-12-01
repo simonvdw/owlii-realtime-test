@@ -108,24 +108,18 @@ function shuffle(array) {
 function initGame() {
   const savedName = getCookie('owlyUserName');
   const savedBirthYear = getCookie('owlyUserBirthYear');
-  
-  const ageWarning = document.getElementById('ageWarning');
-  const ageDisplay = document.getElementById('ageDisplay');
+
   const startButton = document.getElementById('startButton');
-  
+
   if (!savedName || !savedBirthYear) {
-    ageWarning.style.display = 'block';
     startButton.disabled = true;
     startButton.style.opacity = '0.5';
     startButton.style.cursor = 'not-allowed';
     return;
   }
-  
+
   const age = calculateAge(savedBirthYear);
-  document.getElementById('playerName').textContent = savedName;
-  document.getElementById('playerAge').textContent = age;
-  ageDisplay.style.display = 'block';
-  
+
   // Store age for game
   window.gameAge = age;
 }

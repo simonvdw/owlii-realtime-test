@@ -1,18 +1,20 @@
 <h1>Extra's 🎁</h1>
 
+<!-- User Info Display -->
+<div id="userInfoDisplay" class="user-info-display" style="display: none;">
+  <p>Afgestemd op <strong><span id="displayUserName"></span></strong> (<span id="displayUserAge"></span> jaar oud)</p>
+</div>
+
+<div id="userInfoWarning" class="user-info-warning" style="display: none;">
+  <p>⚠️ We kennen je nog niet!</p>
+  <p>Ga eerst naar de <a href="/">Home pagina</a> en vul je gegevens in om de spellen af te stemmen op jouw niveau.</p>
+</div>
+
 <div class="game-container">
   <h2>🧮 Reken Maar!</h2>
   <p class="game-description">Test je rekenvaardigheden in 1 minuut!</p>
 
   <div id="gameStart" class="game-screen active">
-    <div id="ageWarning" class="age-warning" style="display: none;">
-      <p>⚠️ We kennen je leeftijd nog niet!</p>
-      <p>Ga eerst naar de <a href="/">Home pagina</a> en vul je gegevens in.</p>
-    </div>
-    <div id="ageDisplay" style="display: none;">
-      <p>Hoi <span id="playerName"></span>! 👋</p>
-      <p>Je bent of wordt <span id="playerAge"></span> jaar oud</p>
-    </div>
     <button id="startButton" class="game-button">START SPEL 🚀</button>
   </div>
 
@@ -52,14 +54,6 @@
   <p class="game-description">Raad het dier aan de hand van het geluid - 1 minuut!</p>
 
   <div id="animalGameStart" class="game-screen active">
-    <div id="animalAgeWarning" class="age-warning" style="display: none;">
-      <p>⚠️ We kennen je leeftijd nog niet!</p>
-      <p>Ga eerst naar de <a href="/">Home pagina</a> en vul je gegevens in.</p>
-    </div>
-    <div id="animalAgeDisplay" style="display: none;">
-      <p>Hoi <span id="animalPlayerName"></span>! 👋</p>
-      <p>Je bent of wordt <span id="animalPlayerAge"></span> jaar oud</p>
-    </div>
     <button id="animalStartButton" class="game-button">START SPEL 🚀</button>
   </div>
 
@@ -103,6 +97,49 @@
 </div>
 
 <style>
+/* User Info Display */
+.user-info-display {
+  text-align: center;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, rgba(90, 140, 80, 0.15) 0%, rgba(90, 140, 80, 0.08) 100%);
+  border-radius: 1rem;
+  border: 2px solid rgba(90, 140, 80, 0.3);
+}
+
+.user-info-display p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #4a5d3f;
+  font-weight: 500;
+}
+
+.user-info-display strong {
+  color: #5a8c50;
+  font-weight: 700;
+}
+
+.user-info-warning {
+  text-align: center;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background: rgba(240, 163, 85, 0.15);
+  border-radius: 1rem;
+  border: 2px solid rgba(240, 163, 85, 0.4);
+}
+
+.user-info-warning p {
+  margin: 0.5rem 0;
+  color: #6f4f44;
+  font-weight: 600;
+}
+
+.user-info-warning a {
+  color: #5a8c50;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
 .game-container {
   margin-top: 2rem;
   padding: 2rem;
@@ -129,39 +166,6 @@
 
 .game-screen.active {
   display: block;
-}
-
-.age-warning {
-  background: rgba(240, 163, 85, 0.2);
-  padding: 1.5rem;
-  border-radius: 1rem;
-  margin-bottom: 1rem;
-  border: 2px solid rgba(240, 163, 85, 0.4);
-}
-
-.age-warning p {
-  margin: 0.5rem 0;
-  color: #6f4f44;
-  font-weight: 600;
-}
-
-.age-warning a {
-  color: #5a8c50;
-  text-decoration: underline;
-}
-
-#ageDisplay {
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: rgba(90, 140, 80, 0.15);
-  border-radius: 1rem;
-}
-
-#ageDisplay p {
-  margin: 0.3rem 0;
-  color: #4a5d3f;
-  font-weight: 600;
-  font-size: 1.1rem;
 }
 
 .game-button {
