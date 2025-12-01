@@ -200,6 +200,11 @@ function showQuestion() {
 // Check answer
 function checkAnswer(selectedAnswer) {
   const answerButtons = document.querySelectorAll('.answer-button');
+  const isCorrect = selectedAnswer === correctAnswer;
+
+  // Play sound effect
+  const soundEffect = new Audio(isCorrect ? 'rekenmaar-succes.mp3' : 'rekenmaar-fail.mp3');
+  soundEffect.play().catch(err => console.log('Audio play failed:', err));
 
   // Disable all buttons
   answerButtons.forEach(button => {
@@ -214,7 +219,7 @@ function checkAnswer(selectedAnswer) {
   });
 
   // Update score if correct
-  if (selectedAnswer === correctAnswer) {
+  if (isCorrect) {
     score++;
     document.getElementById('currentScore').textContent = score;
   }
