@@ -325,6 +325,54 @@
         color: #6f4f44;
       }
 
+      /* User info display */
+      #userInfoDisplay {
+        display: none;
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, rgba(240, 163, 85, 0.1) 0%, rgba(111, 79, 68, 0.1) 100%);
+        border-radius: 1.5rem;
+        border: 2px solid rgba(240, 163, 85, 0.3);
+      }
+
+      #userInfoDisplay.active {
+        display: block;
+      }
+
+      .user-greeting {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #6f4f44;
+        margin-bottom: 0.5rem;
+      }
+
+      .user-age {
+        font-size: 1.3rem;
+        color: #f0a355;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .edit-button {
+        background: linear-gradient(135deg, #6f4f44 0%, #4a3428 100%);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 1rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        font-family: 'Fredoka', sans-serif;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+      }
+
+      .edit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(111, 79, 68, 0.4);
+      }
+
       /* Responsive */
       @media (max-width: 768px) {
         h1 {
@@ -376,6 +424,12 @@
         </h1>
 
         <p class="subtitle">Leer en speel met OWLY, jouw slimme uilvriend! 🦉</p>
+
+        <div id="userInfoDisplay">
+          <div class="user-greeting">Hoi <span id="displayName"></span>! 👋</div>
+          <div class="user-age">Je bent <span id="displayAge"></span> jaar oud</div>
+          <button class="edit-button" onclick="editUserInfo()">✏️ Gegevens aanpassen</button>
+        </div>
 
         <div id="welcomeForm">
           <form id="startForm">
@@ -445,6 +499,64 @@
     </main>
 
     <script>
+      // Cookie helper functions
+      function setCookie(name, value, days = 365) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+      }
+
+      function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      }
+
+      function calculateAge(birthYear) {
+        const currentYear = new Date().getFullYear();
+        return currentYear - parseInt(birthYear);
+      }
+
+      function showUserInfo(name, birthYear) {
+        const age = calculateAge(birthYear);
+        document.getElementById('displayName').textContent = name;
+        document.getElementById('displayAge').textContent = age;
+        document.getElementById('userInfoDisplay').classList.add('active');
+        document.getElementById('welcomeForm').style.display = 'none';
+        document.getElementById('chatInterface').classList.add('active');
+      }
+
+      function editUserInfo() {
+        document.getElementById('userInfoDisplay').classList.remove('active');
+        document.getElementById('welcomeForm').style.display = 'block';
+        document.getElementById('chatInterface').classList.remove('active');
+      }
+
+      // Load saved data on page load
+      window.addEventListener('DOMContentLoaded', () => {
+        const savedName = getCookie('owlyUserName');
+        const savedBirthYear = getCookie('owlyUserBirthYear');
+
+        if (savedName && savedBirthYear) {
+          // Pre-fill form
+          document.getElementById('nameInput').value = savedName;
+          document.getElementById('birthYearInput').value = savedBirthYear;
+          document.getElementById('betaCodeInput').value = 'BETA';
+
+          // Show user info display
+          showUserInfo(savedName, savedBirthYear);
+
+          // Store in sessionStorage for chat
+          sessionStorage.setItem('userName', savedName);
+          sessionStorage.setItem('userBirthYear', savedBirthYear);
+        }
+      });
+
       document.getElementById('startForm').addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -457,13 +569,16 @@
           return;
         }
 
-        // Store user info
+        // Save to cookies
+        setCookie('owlyUserName', name);
+        setCookie('owlyUserBirthYear', birthYear);
+
+        // Store in sessionStorage for chat
         sessionStorage.setItem('userName', name);
         sessionStorage.setItem('userBirthYear', birthYear);
 
-        // Hide form, show chat interface
-        document.getElementById('welcomeForm').style.display = 'none';
-        document.getElementById('chatInterface').classList.add('active');
+        // Show user info (this also shows chat interface)
+        showUserInfo(name, birthYear);
       });
     </script>
     <script type="module" src="owly-instructions.js"></script>
