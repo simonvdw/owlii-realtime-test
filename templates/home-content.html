@@ -9,9 +9,12 @@
 <p class="subtitle">Leer en speel met OWLY, jouw slimme uilvriend! 🦉</p>
 
 <div id="userInfoDisplay">
-  <div class="user-greeting">Hoi <span id="displayName"></span>! 👋</div>
-  <div class="user-age">Je bent of wordt <span id="displayAge"></span> jaar oud</div>
-  <button class="edit-button" onclick="editUserInfo()">✏️ Gegevens aanpassen</button>
+  <div class="user-info-compact">
+    <div class="user-text">
+      Hoi <span id="displayName"></span>! 👋 (<span id="displayAge"></span> jaar)
+    </div>
+    <button class="edit-icon-button" onclick="editUserInfo()" aria-label="Gegevens aanpassen">✏️</button>
+  </div>
 </div>
 
 <div id="welcomeForm">
@@ -27,14 +30,16 @@
     </div>
 
     <div class="form-group">
-      <label for="birthYearInput">Wat is je geboortejaar?</label>
-      <select id="birthYearInput" required>
-        <option value="">Kies je geboortejaar</option>
-        <option value="2019">2019</option>
-        <option value="2018">2018</option>
-        <option value="2017">2017</option>
-        <option value="2016">2016</option>
-        <option value="2015">2015</option>
+      <label for="ageInput">Hoe oud ben je?</label>
+      <select id="ageInput" required>
+        <option value="">Kies je leeftijd</option>
+        <option value="6">6 jaar</option>
+        <option value="7">7 jaar</option>
+        <option value="8">8 jaar</option>
+        <option value="9">9 jaar</option>
+        <option value="10">10 jaar</option>
+        <option value="11">11 jaar</option>
+        <option value="12">12 jaar</option>
       </select>
     </div>
 

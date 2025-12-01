@@ -12,10 +12,7 @@ function getCookie(name) {
   return null;
 }
 
-function calculateAge(birthYear) {
-  const currentYear = new Date().getFullYear();
-  return currentYear - parseInt(birthYear);
-}
+
 
 // Game state
 let currentQuestion = 0;
@@ -107,21 +104,19 @@ function shuffle(array) {
 // Initialize game
 function initGame() {
   const savedName = getCookie('owlyUserName');
-  const savedBirthYear = getCookie('owlyUserBirthYear');
+  const savedAge = getCookie('owlyUserAge');
 
   const startButton = document.getElementById('startButton');
 
-  if (!savedName || !savedBirthYear) {
+  if (!savedName || !savedAge) {
     startButton.disabled = true;
     startButton.style.opacity = '0.5';
     startButton.style.cursor = 'not-allowed';
     return;
   }
 
-  const age = calculateAge(savedBirthYear);
-
   // Store age for game
-  window.gameAge = age;
+  window.gameAge = parseInt(savedAge);
 }
 
 // Start game

@@ -1,12 +1,6 @@
 // public/owly-instructions.js
 
-function calculateAge(birthYear) {
-  const currentYear = new Date().getFullYear();
-  return currentYear - parseInt(birthYear);
-}
-
-function getGrade(birthYear) {
-  const age = calculateAge(birthYear);
+function getGrade(age) {
   // Belgian school system: typically start school at age 6 (eerste leerjaar)
   const grade = age - 5;
 
@@ -24,9 +18,8 @@ function getGrade(birthYear) {
   return gradeNames[grade] || 'school';
 }
 
-export function getOwlyInstructions(name, birthYear) {
-  const age = calculateAge(birthYear);
-  const grade = getGrade(birthYear);
+export function getOwlyInstructions(name, age) {
+  const grade = getGrade(age);
 
   return `
 Je bent OWLY, de persoonlijke uil van ${name}, een kind dat woont in Gent en in het ${grade} zit.

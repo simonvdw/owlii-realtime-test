@@ -15,7 +15,7 @@ const logEl = document.getElementById("log");
 let session = null;
 let hasStarted = false;
 let userName = "";
-let userBirthYear = "";
+let userAge = "";
 let tailTimeoutId = null;
 
 function log(message) {
@@ -26,12 +26,12 @@ function log(message) {
 /**
  * OWLY instructies, gecombineerd met extra veiligheidsregels.
  * @param {string} name - De voornaam van het kind
- * @param {string} birthYear - Het geboortejaar van het kind
+ * @param {number} age - De leeftijd van het kind
  */
-function createOwlyAgent(name, birthYear) {
+function createOwlyAgent(name, age) {
   return new RealtimeAgent({
     name: "OWLY",
-    instructions: getOwlyInstructions(name, birthYear),
+    instructions: getOwlyInstructions(name, age),
   });
 }
 
@@ -46,9 +46,9 @@ async function startConversation() {
 
   // Get user data from sessionStorage (set by the form)
   userName = sessionStorage.getItem('userName') || '';
-  userBirthYear = sessionStorage.getItem('userBirthYear') || '';
+  userAge = sessionStorage.getItem('userAge') || '';
 
-  if (!userName || !userBirthYear) {
+  if (!userName || !userAge) {
     statusEl.textContent = "Vul eerst je gegevens in!";
     return;
   }
@@ -76,7 +76,7 @@ async function startConversation() {
 
     log("Got ephemeral key. Creating OWLY agent and session.");
 
-    const agent = createOwlyAgent(userName, userBirthYear);
+    const agent = createOwlyAgent(userName, userAge);
 
     session = new RealtimeSession(agent, {
       model: "gpt-realtime",

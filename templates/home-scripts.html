@@ -17,13 +17,7 @@
     return null;
   }
 
-  function calculateAge(birthYear) {
-    const currentYear = new Date().getFullYear();
-    return currentYear - parseInt(birthYear);
-  }
-
-  function showUserInfo(name, birthYear) {
-    const age = calculateAge(birthYear);
+  function showUserInfo(name, age) {
     document.getElementById('displayName').textContent = name;
     document.getElementById('displayAge').textContent = age;
     document.getElementById('userInfoDisplay').classList.add('active');
@@ -40,20 +34,20 @@
   // Load saved data on page load
   window.addEventListener('DOMContentLoaded', () => {
     const savedName = getCookie('owlyUserName');
-    const savedBirthYear = getCookie('owlyUserBirthYear');
+    const savedAge = getCookie('owlyUserAge');
 
-    if (savedName && savedBirthYear) {
+    if (savedName && savedAge) {
       // Pre-fill form
       document.getElementById('nameInput').value = savedName;
-      document.getElementById('birthYearInput').value = savedBirthYear;
+      document.getElementById('ageInput').value = savedAge;
       document.getElementById('betaCodeInput').value = 'BETA';
 
       // Show user info display
-      showUserInfo(savedName, savedBirthYear);
+      showUserInfo(savedName, savedAge);
 
       // Store in sessionStorage for chat
       sessionStorage.setItem('userName', savedName);
-      sessionStorage.setItem('userBirthYear', savedBirthYear);
+      sessionStorage.setItem('userAge', savedAge);
     }
   });
 
@@ -61,7 +55,7 @@
     e.preventDefault();
 
     const name = document.getElementById('nameInput').value.trim();
-    const birthYear = document.getElementById('birthYearInput').value.trim();
+    const age = document.getElementById('ageInput').value.trim();
     const betaCode = document.getElementById('betaCodeInput').value.trim();
 
     if (betaCode.toUpperCase() !== 'BETA') {
@@ -71,14 +65,14 @@
 
     // Save to cookies
     setCookie('owlyUserName', name);
-    setCookie('owlyUserBirthYear', birthYear);
+    setCookie('owlyUserAge', age);
 
     // Store in sessionStorage for chat
     sessionStorage.setItem('userName', name);
-    sessionStorage.setItem('userBirthYear', birthYear);
+    sessionStorage.setItem('userAge', age);
 
     // Show user info (this also shows chat interface)
-    showUserInfo(name, birthYear);
+    showUserInfo(name, age);
   });
 </script>
 <script type="module" src="owly-instructions.js"></script>

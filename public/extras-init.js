@@ -15,20 +15,15 @@
     return null;
   }
 
-  function calculateAge(birthYear) {
-    const currentYear = new Date().getFullYear();
-    return currentYear - parseInt(birthYear);
-  }
-
   // Display user info at the top of the page
   function displayUserInfo() {
     const savedName = getCookie('owlyUserName');
-    const savedBirthYear = getCookie('owlyUserBirthYear');
-    
+    const savedAge = getCookie('owlyUserAge');
+
     const userInfoDisplay = document.getElementById('userInfoDisplay');
     const userInfoWarning = document.getElementById('userInfoWarning');
-    
-    if (!savedName || !savedBirthYear) {
+
+    if (!savedName || !savedAge) {
       // Show warning if user info is not available
       if (userInfoWarning) {
         userInfoWarning.style.display = 'block';
@@ -38,11 +33,9 @@
       }
     } else {
       // Show user info
-      const age = calculateAge(savedBirthYear);
-      
       if (userInfoDisplay) {
         document.getElementById('displayUserName').textContent = savedName;
-        document.getElementById('displayUserAge').textContent = age;
+        document.getElementById('displayUserAge').textContent = savedAge;
         userInfoDisplay.style.display = 'block';
       }
       if (userInfoWarning) {
