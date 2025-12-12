@@ -46,11 +46,11 @@
   // Initialize game
   function initAnimalGame() {
     const savedName = getCookie('owlyUserName');
-    const savedBirthYear = getCookie('owlyUserBirthYear');
+    const savedAge = getCookie('owlyUserAge');
 
     const startButton = document.getElementById('animalStartButton');
 
-    if (!savedName || !savedBirthYear) {
+    if (!savedName || !savedAge) {
       startButton.disabled = true;
       startButton.style.opacity = '0.5';
       startButton.style.cursor = 'not-allowed';
