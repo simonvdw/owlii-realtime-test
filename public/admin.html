@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OWLY Admin</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #050914;
+        color: #f5f6fb;
+        margin: 0;
+        min-height: 100vh;
+      }
+      .admin-app {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 4rem;
+      }
+      .panel {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      }
+      h1 {
+        margin-bottom: 0.2rem;
+      }
+      h2 {
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      label {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-weight: 600;
+      }
+      input, select, textarea {
+        width: 100%;
+        border-radius: 0.6rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        color: #f5f6fb;
+        padding: 0.65rem 0.85rem;
+        font-size: 1rem;
+      }
+      input:focus, select:focus, textarea:focus {
+        outline: 2px solid #5f5cff;
+      }
+      textarea {
+        min-height: 160px;
+        resize: vertical;
+      }
+      button {
+        background: linear-gradient(135deg, #5f5cff, #7b5bff);
+        border: none;
+        border-radius: 999px;
+        color: white;
+        padding: 0.75rem 1.75rem;
+        font-size: 1rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(95, 92, 255, 0.35);
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .grid {
+        display: grid;
+        gap: 1.5rem;
+      }
+      .grid.two {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .section-card {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .section-card header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .log-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-height: 380px;
+        overflow-y: auto;
+      }
+      .log-item {
+        border-radius: 0.8rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.65rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 0.85rem;
+        margin-right: 0.35rem;
+      }
+      .status-text {
+        color: #a7b0ff;
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="admin-app">
+      <div class="panel">
+        <h1>OWLY Admin</h1>
+        <p class="status-text" id="adminStatus">Beheer Studio content en gesprekslogs.</p>
+
+        <section id="loginView" class="grid" style="margin-top: 1.5rem;">
+          <form id="loginForm" class="section-card" autocomplete="off">
+            <h2>Inloggen</h2>
+            <div class="form-group">
+              <label for="adminUser">Gebruikersnaam</label>
+              <input id="adminUser" name="username" required />
+            </div>
+            <div class="form-group">
+              <label for="adminPass">Wachtwoord</label>
+              <input id="adminPass" name="password" type="password" required />
+            </div>
+            <button type="submit">Log in</button>
+          </form>
+        </section>
+
+        <section id="adminPanel" hidden>
+          <header style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+            <div>
+              <h2 style="margin:0;">Welkom terug, admin 👋</h2>
+              <p class="status-text">Beheer creatieve content en bekijk Owly herinneringen.</p>
+            </div>
+            <button id="logoutButton" type="button">Log uit</button>
+          </header>
+
+          <section class="section-card" id="studioSection">
+            <header>
+              <div>
+                <h3 style="margin:0;">OWLY Studio</h3>
+                <p class="status-text">Genereer teksten en audiobestanden voor jokes, raadsels of verhalen.</p>
+              </div>
+            </header>
+
+            <div class="grid two">
+              <div>
+                <div class="form-group">
+                  <label for="studioType">Type</label>
+                  <select id="studioType">
+                    <option value="verhaal">Verhaaltje</option>
+                    <option value="mopje">Mopje</option>
+                    <option value="raadsel">Raadsel</option>
+                    <option value="weetje">Weetje</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="studioPrompt">Prompt</label>
+                  <textarea id="studioPrompt" placeholder="Bijvoorbeeld: Maak een grappig mopje over uilen en fietsen."></textarea>
+                </div>
+                <button id="generateTextButton" type="button">Genereer tekst</button>
+              </div>
+
+              <div>
+                <div class="form-group">
+                  <label for="studioTitle">Titel</label>
+                  <input id="studioTitle" placeholder="Geef je creatie een naam" />
+                </div>
+                <div class="form-group">
+                  <label for="studioText">Tekst</label>
+                  <textarea id="studioText" placeholder="Hier verschijnt je tekst, je kan hem nog bijwerken."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid two" style="margin-top:1.5rem;">
+              <div class="section-card" style="background:rgba(255,255,255,0.02);">
+                <h4>Categorieën</h4>
+                <div class="form-group">
+                  <label for="categorySelect">Hoofdcategorie</label>
+                  <select id="categorySelect"></select>
+                </div>
+                <div class="form-group">
+                  <label for="subcategorySelect">Subcategorie</label>
+                  <select id="subcategorySelect"></select>
+                </div>
+                <div class="form-group">
+                  <label for="newCategoryInput">Nieuwe hoofdcategorie</label>
+                  <input id="newCategoryInput" placeholder="bv. Mopjes" />
+                  <button id="createCategoryButton" type="button" style="margin-top:0.5rem;">Voeg categorie toe</button>
+                </div>
+                <div class="form-group">
+                  <label for="newSubcategoryInput">Nieuwe subcategorie</label>
+                  <input id="newSubcategoryInput" placeholder="bv. Dierenmopjes" />
+                  <button id="createSubcategoryButton" type="button" style="margin-top:0.5rem;">Voeg subcategorie toe</button>
+                </div>
+              </div>
+
+              <div class="section-card" style="background:rgba(255,255,255,0.02);">
+                <h4>Audio genereren</h4>
+                <div class="form-group">
+                  <label for="voiceSelect">Stem</label>
+                  <select id="voiceSelect">
+                    <option value="alloy">Alloy</option>
+                    <option value="verse">Verse</option>
+                    <option value="aria">Aria</option>
+                    <option value="coral">Coral</option>
+                  </select>
+                </div>
+                <button id="createAudioButton" type="button">Maak geluidsbestand</button>
+                <p class="status-text" id="studioMessage"></p>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card" id="logsSection">
+            <header>
+              <div>
+                <h3 style="margin:0;">Owly logs</h3>
+                <p class="status-text">Bekijk herinneringen per kind en per dag.</p>
+              </div>
+            </header>
+
+            <div class="grid two">
+              <div>
+                <label for="filterName">Voornaam</label>
+                <input id="filterName" placeholder="bv. Elo" />
+              </div>
+              <div>
+                <label for="filterAge">Leeftijd</label>
+                <select id="filterAge">
+                  <option value="">Alle leeftijden</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid two" style="margin-top:1rem;">
+              <div>
+                <label for="filterFrom">Vanaf datum</label>
+                <input id="filterFrom" type="date" />
+              </div>
+              <div>
+                <label for="filterTo">Tot datum</label>
+                <input id="filterTo" type="date" />
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:1rem;">
+              <label for="filterSummary">Zoekwoord in samenvatting</label>
+              <input id="filterSummary" placeholder="bv. rekenen" />
+            </div>
+
+            <button id="filterLogsButton" type="button" style="margin-top:1rem;">Filter logs</button>
+            <div class="log-list" id="logsList" style="margin-top:1rem;"></div>
+          </section>
+        </section>
+      </div>
+    </main>
+
+    <script type="module" src="/admin.js"></script>
+  </body>
+</html>
