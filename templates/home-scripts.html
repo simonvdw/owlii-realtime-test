@@ -54,7 +54,6 @@
       // Pre-fill form
       document.getElementById('nameInput').value = savedName;
       document.getElementById('ageInput').value = savedAge;
-      document.getElementById('betaCodeInput').value = 'BETA';
 
       // Show user info display
       showUserInfo(savedName, savedAge);
@@ -79,10 +78,10 @@
 
     const name = document.getElementById('nameInput').value.trim();
     const age = document.getElementById('ageInput').value.trim();
-    const betaCode = document.getElementById('betaCodeInput').value.trim();
+    const accessCode = document.getElementById('betaCodeInput').value.trim();
 
-    if (betaCode.toUpperCase() !== 'BETA') {
-      alert('Oeps! De beta code klopt niet. Probeer "BETA".');
+    if (accessCode.toLowerCase() !== 'computer') {
+      alert('Oeps! De toegangscode klopt niet.');
       return;
     }
 

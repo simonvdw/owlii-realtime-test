@@ -25,6 +25,8 @@ Sorry Simon konnet nie laten :) + test of ik ook local dev en deploys aan de pra
 - 👤 **Gepersonaliseerd** - vraagt om de voornaam van het kind
 - 🔒 **Veilige token proxy** - API key blijft server-side
 - ⌨️ **Push-to-talk** - spreek via knop of spatiebalk
+- 🎛️ **Admin Studio** - beheer jokes/raadsels/verhalen + categorieën met OpenAI schrijf- en spraakflow
+- 🗂️ **Owly logs** - gespreksherinneringen met filters op datum, leeftijd en trefwoorden
 
 ## 🏗️ Architectuur
 
@@ -48,6 +50,8 @@ OpenAI API (ephemeral tokens)
 
 - Node.js >= 20
 - OpenAI API key met toegang tot Realtime API
+- PostgreSQL (Render of lokaal)
+- Database inloggegevens (host, database, user, password)
 - Browser met WebRTC support (Chrome, Firefox, Safari)
 
 ### Installatie
@@ -63,10 +67,16 @@ cd owlii-realtime-test
 npm install
 ```
 
-3. Maak een `.env` bestand met je OpenAI API key:
+3. Maak een `.env` bestand met je sleutels (Render waarden staan hieronder als fallback in de code):
 ```bash
 OPENAI_API_KEY=sk-proj-...
 PORT=3000
+DB_HOST=dpg-d4vg7vemcj7s73dn0nf0-a
+DB_PORT=5432
+DB_NAME=owly_postgres_db
+DB_USER=owly_postgres_db_user
+DB_PASSWORD=H7muDNQ42ufBVKXSSw3F8nn3LiwSAAz9
+SESSION_SECRET=iets-super-geheim
 ```
 
 4. Start de server:
@@ -82,8 +92,9 @@ http://localhost:3000
 ## 🎮 Gebruik
 
 1. Vul je voornaam in
-2. Klik op "Start gesprek" of druk Enter
-3. Geef microfoontoegang wanneer gevraagd
+2. Vul de geheime toegangscode in ("computer")
+3. Klik op "Start gesprek" of druk Enter
+4. Geef microfoontoegang wanneer gevraagd
 4. Gebruik de "Talk" knop of **spatiebalk** om te spreken (push-to-talk)
 5. Laat los om te stoppen met spreken
 6. Klik "Stop gesprek" om de sessie te beëindigen
@@ -92,11 +103,16 @@ http://localhost:3000
 
 ```
 owlii-realtime-test/
-├── server.js                    # Express backend met token proxy
+├── server.js                    # Express backend + admin API + token proxy
+├── db/
+│   └── index.js                # Postgres pool + tabelinitialisatie
+├── routes/
+│   └── admin.js                # Admin API endpoints (Studio + logs)
 ├── public/
-│   ├── index.html              # UI met voornaam input en knoppen
-│   ├── main.js                 # Frontend logica en session management
+│   ├── admin.html / admin.js   # Admin portal
+│   ├── home.js                 # Frontend logica en session management
 │   └── owly-instructions.js    # OWLY karakterinstructies (Nederlands)
+├── templates/                  # Hero/extras/over-ons content
 ├── package.json
 ├── .env                        # API keys (niet in git)
 └── .github/
@@ -147,9 +163,26 @@ return new RealtimeAgent({
 
 - `express` (^5.1.0) - HTTP server
 - `dotenv` (^17.2.3) - Environment variabelen
+- `express-session` (^1.18.1) - eenvoudige admin-auth sessies
+- `pg` (^8.13.1) - Postgres databank connectie
 - `@openai/agents-realtime` - Geladen via CDN
 
 **Geen build stap nodig** - pure ES modules in de browser.
+
+## 🧑‍💻 Admin portal
+
+- Surf naar `/admin`
+- Log in met **admin / computer**
+- **OWLY Studio**
+   - Geef een prompt + type (mopje/raadsel/verhaal/weetje)
+   - Genereer een uitgeschreven tekst via OpenAI
+   - Bewerk tekst en maak daarna een WAV-bestand (tts) dat op de server onder `public/studio-audio` wordt opgeslagen
+   - Koppel hoofd- en subcategorieën, maak eenvoudig nieuwe categorieën aan
+- **Owly logs**
+   - Bekijk samenvattingen (10 bulletpoints per 10 minuten) gefilterd op datum, leeftijd, voornaam of trefwoord
+   - Logs komen binnen via `POST /api/logs` (bijv. vanuit de voice-flow)
+
+Alle admin API's zijn afgeschermd met sessies; alleen `/api/admin/login` is publiek.
 
 ## 📝 Ontwikkeling
 

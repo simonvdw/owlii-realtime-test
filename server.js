@@ -3,10 +3,32 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const session = require("express-session");
 const { renderTemplate } = require("./utils/template");
+const { initDb, query } = require("./db");
+const adminRouter = require("./routes/admin");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SESSION_SECRET = process.env.SESSION_SECRET || "owly-secret";
+
+app.set("trust proxy", 1);
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    name: "owly.sid",
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production"
+    }
+  })
+);
 
 // Helper to load content file
 function loadContent(filename) {
@@ -51,10 +73,16 @@ app.get("/over-ons", (req, res) => {
   res.send(html);
 });
 
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "admin.html"));
+});
+
 // Simple health check
 app.get("/health", (req, res) => {
   res.json({ ok: true });
 });
+
+app.use("/api/admin", adminRouter);
 
 // Serve static files (CSS, JS, images, etc.) from /public
 app.use(express.static(path.join(__dirname, "public")));
@@ -95,6 +123,38 @@ app.get("/api/token", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Owlii test server running on http://localhost:${PORT}`);
+app.post("/api/logs", async (req, res) => {
+  const { firstName, age, summary } = req.body || {};
+  if (!firstName || !summary) {
+    return res.status(400).json({ error: "voornaam en samenvatting zijn verplicht" });
+  }
+
+  const summaryText = Array.isArray(summary) ? summary.join("\n") : String(summary);
+  if (summaryText.length > 5000) {
+    return res.status(400).json({ error: "Samenvatting is te lang" });
+  }
+
+  try {
+    const result = await query(
+      `INSERT INTO owly_logs (first_name, age, summary)
+       VALUES ($1, $2, $3)
+       RETURNING *`,
+      [firstName.trim(), age ? Number(age) : null, summaryText.trim()]
+    );
+    res.status(201).json({ log: result.rows[0] });
+  } catch (err) {
+    console.error("Failed to store log", err);
+    res.status(500).json({ error: "Kon log niet opslaan" });
+  }
 });
+
+initDb()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Owlii test server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Kon database niet initialiseren", err);
+    process.exit(1);
+  });

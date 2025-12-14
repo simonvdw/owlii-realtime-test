@@ -20,6 +20,7 @@ let userAge = "";
 let conversationType = "standaard";
 let conversationTopic = "";
 let tailTimeoutId = null;
+let conversationStartTime = null;
 
 function log(message) {
   console.log(message);
@@ -113,6 +114,7 @@ async function startConversation() {
 
     // Mic standaard uit: push to talk
     session.mute(true);
+    conversationStartTime = Date.now();
 
     statusEl.textContent =
       "Verbonden met OWLY. Gebruik de TALK knop om te praten.";
@@ -137,6 +139,7 @@ async function startConversation() {
     pushToTalkContainer.style.display = "none";
     pressToTalkButton.disabled = true;
     nameInput.disabled = false;
+    conversationStartTime = null;
 
     // Re-enable conversation type controls on error
     setConversationControlsEnabled(true);
@@ -153,6 +156,11 @@ function stopConversation() {
   if (!session) {
     return;
   }
+
+  const historySnapshot = snapshotHistory(session.history || []);
+  const durationMs = conversationStartTime ? Date.now() - conversationStartTime : 0;
+  const hasHistoryForLog = hasConversationMessages(historySnapshot);
+  conversationStartTime = null;
 
   log("Stop button pressed. Interrupting and closing session.");
 
@@ -173,7 +181,9 @@ function stopConversation() {
   session = null;
   hasStarted = false;
 
-  statusEl.textContent = "Gesprek gestopt. Je kan opnieuw starten.";
+  statusEl.textContent = hasHistoryForLog
+    ? "Gesprek gestopt. Samenvatting wordt opgeslagen..."
+    : "Gesprek gestopt. Je kan opnieuw starten.";
   button.style.display = "inline-block";
   button.disabled = false;
   button.textContent = "Start gesprek";
@@ -186,6 +196,170 @@ function stopConversation() {
 
   // Re-enable conversation type controls after call ends
   setConversationControlsEnabled(true);
+
+  if (hasHistoryForLog) {
+    saveConversationLog(historySnapshot, durationMs);
+  }
+}
+
+function snapshotHistory(rawHistory) {
+  if (!Array.isArray(rawHistory)) {
+    return [];
+  }
+  try {
+    return typeof structuredClone === "function"
+      ? structuredClone(rawHistory)
+      : JSON.parse(JSON.stringify(rawHistory));
+  } catch (err) {
+    console.warn("Kon gesprekshistorie niet volledig kopieren", err);
+    try {
+      return JSON.parse(JSON.stringify(rawHistory));
+    } catch (_) {
+      return [];
+    }
+  }
+}
+
+function hasConversationMessages(history = []) {
+  return history.some((item) => item?.type === "message" && (item.role === "user" || item.role === "assistant"));
+}
+
+function extractMessageText(item) {
+  if (!item || item.type !== "message") {
+    return "";
+  }
+  const fragments = (item.content || []).map((part) => {
+    if (!part) return "";
+    if (part.type === "input_text" || part.type === "output_text") {
+      return part.text || "";
+    }
+    if ((part.type === "output_audio" || part.type === "input_audio") && part.transcript) {
+      return part.transcript;
+    }
+    return "";
+  });
+  return fragments.join(" ").replace(/\s+/g, " ").trim();
+}
+
+function truncateText(text, maxLength = 180) {
+  if (!text) {
+    return "";
+  }
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return `${text.slice(0, maxLength - 3).trim()}...`;
+}
+
+// Bouw beknopte bullets voor Owly logs op basis van de dialoog.
+function buildConversationSummary(history, durationMs, childName) {
+  const messages = history.filter((item) => item?.type === "message" && (item.role === "user" || item.role === "assistant"));
+  if (!messages.length) {
+    return [];
+  }
+
+  const pairs = [];
+  let pendingUser = null;
+
+  messages.forEach((msg) => {
+    const text = extractMessageText(msg);
+    if (!text) {
+      return;
+    }
+    if (msg.role === "user") {
+      if (pendingUser) {
+        pairs.push({ user: pendingUser, assistant: null });
+      }
+      pendingUser = text;
+    } else {
+      if (pendingUser) {
+        pairs.push({ user: pendingUser, assistant: text });
+        pendingUser = null;
+      } else {
+        pairs.push({ user: null, assistant: text });
+      }
+    }
+  });
+
+  if (pendingUser) {
+    pairs.push({ user: pendingUser, assistant: null });
+  }
+
+  if (!pairs.length) {
+    return [];
+  }
+
+  const blocks = Math.max(1, Math.ceil(Math.max(durationMs, 1) / (10 * 60 * 1000)));
+  const limit = Math.min(pairs.length, blocks * 10, 30);
+  const label = childName || "Het kind";
+
+  return pairs
+    .slice(-limit)
+    .map((pair) => {
+      const userPart = pair.user ? truncateText(pair.user) : "";
+      const assistantPart = pair.assistant ? truncateText(pair.assistant) : "";
+      if (userPart && assistantPart) {
+        return `- ${label} vroeg: ${userPart}. OWLY antwoordde: ${assistantPart}`;
+      }
+      if (userPart) {
+        return `- ${label} zei: ${userPart}`;
+      }
+      if (assistantPart) {
+        return `- OWLY vertelde: ${assistantPart}`;
+      }
+      return "";
+    })
+    .filter(Boolean);
+}
+
+function setStatusWhenIdle(message) {
+  if (!hasStarted) {
+    statusEl.textContent = message;
+  }
+}
+
+// Verstuur de gespreksamenvatting automatisch naar de backend logs.
+async function saveConversationLog(historySnapshot, durationMs) {
+  if (!userName) {
+    log("Kan Owly log niet opslaan: voornaam ontbreekt.");
+    setStatusWhenIdle("Gesprek gestopt. Je kan opnieuw starten.");
+    return;
+  }
+
+  const summaryLines = buildConversationSummary(historySnapshot, durationMs, userName);
+  if (!summaryLines.length) {
+    log("Geen gespreksdata om te loggen.");
+    setStatusWhenIdle("Gesprek gestopt. Je kan opnieuw starten.");
+    return;
+  }
+
+  const parsedAge = Number(userAge);
+  const payload = {
+    firstName: userName,
+    age: Number.isFinite(parsedAge) ? parsedAge : null,
+    summary: summaryLines
+  };
+
+  log("Samenvatting klaar. Versturen naar /api/logs...");
+  setStatusWhenIdle("Gesprek gestopt. Samenvatting wordt opgeslagen...");
+
+  try {
+    const resp = await fetch("/api/logs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!resp.ok) {
+      const errorText = await resp.text();
+      throw new Error(errorText || `Serverfout ${resp.status}`);
+    }
+    log("Owly log opgeslagen.");
+    setStatusWhenIdle("Gesprek gestopt. Samenvatting opgeslagen.");
+  } catch (err) {
+    console.error("Kon Owly log niet opslaan", err);
+    log(`Kon Owly log niet opslaan: ${err.message}`);
+    setStatusWhenIdle("Gesprek gestopt. Opslaan mislukt.");
+  }
 }
 
 /**
