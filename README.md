@@ -67,39 +67,16 @@ cd owlii-realtime-test
 npm install
 ```
 
-3. **Configureer de database:**
+3. **Configureer environment variables:**
 
-   **Optie A: Lokale PostgreSQL (aanbevolen voor development)**
-
-   a. Installeer PostgreSQL (als nog niet geïnstalleerd):
-   ```bash
-   brew install postgresql@14
-   brew services start postgresql@14
-   ```
-
-   b. Maak een lokale database aan:
-   ```bash
-   createdb owlii_realtime_dev
-   ```
-
-   c. Maak een `.env` bestand met lokale database configuratie:
+   Maak een `.env` bestand:
    ```bash
    PORT=3000
    OPENAI_API_KEY=sk-proj-...
-   DATABASE_URL=postgresql://localhost/owlii_realtime_dev
-   DB_SSL=false
    SESSION_SECRET=iets-super-geheim
    ```
 
-   **Optie B: Remote database (Render)**
-
-   Maak een `.env` bestand met remote database configuratie:
-   ```bash
-   PORT=3000
-   OPENAI_API_KEY=sk-proj-...
-   DATABASE_URL=postgresql://owly_postgres_db_user:H7muDNQ42ufBVKXSSw3F8nn3LiwSAAz9@dpg-d4vg7vemcj7s73dn0nf0-a/owly_postgres_db
-   SESSION_SECRET=iets-super-geheim
-   ```
+   > **Database:** Voor nu valt de app automatisch terug op de externe Render PostgreSQL database URL (hardcoded in `db/index.js`). Dit werkt voor zowel lokale development als productie. Ideaal gezien wordt dit in de toekomst volledig via `DATABASE_URL` environment variable geconfigureerd.
 
 4. Start de development server:
 ```bash
