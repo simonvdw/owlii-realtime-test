@@ -57,13 +57,14 @@ async function request(url, options = {}) {
   });
   if (!response.ok) {
     let message = "Onbekende fout";
+    const text = await response.text();
     try {
-      const data = await response.json();
+      const data = JSON.parse(text);
       message = data.error || message;
     } catch (_) {
-      message = await response.text();
+      message = text || response.statusText;
     }
-    throw new Error(message || response.statusText);
+    throw new Error(message);
   }
   const contentType = response.headers.get("content-type");
   if (contentType && contentType.includes("application/json")) {

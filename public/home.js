@@ -400,8 +400,14 @@ async function saveConversationLog(historySnapshot, durationMs) {
       body: JSON.stringify(payload)
     });
     if (!resp.ok) {
-      const errorText = await resp.text();
-      throw new Error(errorText || `Serverfout ${resp.status}`);
+      let errorMsg = `Serverfout ${resp.status}`;
+      try {
+        const errorData = await resp.json();
+        errorMsg = errorData.detail || errorData.error || errorMsg;
+      } catch {
+        // Response was not JSON, use status text
+      }
+      throw new Error(errorMsg);
     }
     log("Owly log opgeslagen.");
     setStatusWhenIdle("Gesprek gestopt. Samenvatting opgeslagen.");

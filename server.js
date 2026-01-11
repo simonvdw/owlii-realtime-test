@@ -167,7 +167,7 @@ app.post("/api/logs", async (req, res) => {
     );
     res.status(201).json({ log: result.rows[0] });
   } catch (err) {
-    console.error("Failed to store log", err);
+    console.error("Failed to store log:", err.message);
     res.status(500).json({ error: "Kon log niet opslaan" });
   }
 });
