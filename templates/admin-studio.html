@@ -1,0 +1,78 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Content genereren</h3>
+    <span class="badge">AI-powered</span>
+  </div>
+  <div class="grid-2">
+    <div>
+      <div class="form-group">
+        <label for="studioType">Type</label>
+        <select id="studioType">
+          <option value="verhaal">Verhaaltje</option>
+          <option value="mopje">Mopje</option>
+          <option value="raadsel">Raadsel</option>
+          <option value="weetje">Weetje</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="studioPrompt">Prompt</label>
+        <textarea id="studioPrompt" placeholder="bv. Maak een grappig mopje over uilen en fietsen."></textarea>
+      </div>
+      <button id="generateTextButton" class="btn primary" type="button">Genereer tekst</button>
+    </div>
+    <div>
+      <div class="form-group">
+        <label for="studioTitle">Titel</label>
+        <input id="studioTitle" placeholder="Geef je creatie een naam" />
+      </div>
+      <div class="form-group">
+        <label for="studioText">Tekst</label>
+        <textarea id="studioText" placeholder="Hier verschijnt de gegenereerde tekst..."></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <h3>Categorieën</h3>
+    </div>
+    <div class="form-group">
+      <label for="categorySelect">Hoofdcategorie</label>
+      <select id="categorySelect"></select>
+    </div>
+    <div class="form-group">
+      <label for="subcategorySelect">Subcategorie</label>
+      <select id="subcategorySelect"></select>
+    </div>
+    <div class="form-group">
+      <label for="newCategoryInput">Nieuwe categorie</label>
+      <input id="newCategoryInput" placeholder="bv. Mopjes" />
+      <button id="createCategoryButton" class="btn secondary small" type="button" style="margin-top: 0.5rem;">+ Toevoegen</button>
+    </div>
+    <div class="form-group">
+      <label for="newSubcategoryInput">Nieuwe subcategorie</label>
+      <input id="newSubcategoryInput" placeholder="bv. Dierenmopjes" />
+      <button id="createSubcategoryButton" class="btn secondary small" type="button" style="margin-top: 0.5rem;">+ Toevoegen</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>Audio</h3>
+    </div>
+    <div class="form-group">
+      <label for="voiceSelect">Stem</label>
+      <select id="voiceSelect">
+        <option value="alloy">Alloy</option>
+        <option value="verse">Verse</option>
+        <option value="aria">Aria</option>
+        <option value="coral">Coral</option>
+      </select>
+    </div>
+    <button id="createAudioButton" class="btn primary" type="button">Maak audio</button>
+    <p class="status-message" id="studioMessage"></p>
+  </div>
+</div>
+

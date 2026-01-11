@@ -37,7 +37,7 @@ function loadContent(filename) {
 
 // Routes for different pages (BEFORE static middleware)
 app.get("/", (req, res) => {
-  const html = renderTemplate("base", {
+  const html = renderTemplate("app-base", {
     title: "Hey Owly - Leer en Speel met OWLY",
     containerClass: "hero",
     content: loadContent("home-content.html"),
@@ -52,7 +52,7 @@ app.get("/original", (req, res) => {
 });
 
 app.get("/extras", (req, res) => {
-  const html = renderTemplate("base", {
+  const html = renderTemplate("app-base", {
     title: "Extra's - Hey Owly",
     containerClass: "content",
     content: loadContent("extras-content.html"),
@@ -63,7 +63,7 @@ app.get("/extras", (req, res) => {
 });
 
 app.get("/over-ons", (req, res) => {
-  const html = renderTemplate("base", {
+  const html = renderTemplate("app-base", {
     title: "Over Ons - Hey Owly",
     containerClass: "content",
     content: loadContent("over-ons-content.html"),
@@ -73,8 +73,32 @@ app.get("/over-ons", (req, res) => {
   res.send(html);
 });
 
+// Admin routes
 app.get("/admin", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "admin.html"));
+  const html = renderTemplate("admin-base", {
+    title: "Admin - Hey Owly",
+    currentRoute: "home",
+    content: loadContent("admin-home.html")
+  });
+  res.send(html);
+});
+
+app.get("/admin/studio", (req, res) => {
+  const html = renderTemplate("admin-base", {
+    title: "Studio - Admin - Hey Owly",
+    currentRoute: "studio",
+    content: loadContent("admin-studio.html")
+  });
+  res.send(html);
+});
+
+app.get("/admin/logs", (req, res) => {
+  const html = renderTemplate("admin-base", {
+    title: "Logs - Admin - Hey Owly",
+    currentRoute: "logs",
+    content: loadContent("admin-logs.html")
+  });
+  res.send(html);
 });
 
 // Simple health check

@@ -1,9 +1,11 @@
+// DOM Elements
 const loginView = document.getElementById("loginView");
 const adminPanel = document.getElementById("adminPanel");
-const adminStatus = document.getElementById("adminStatus");
+const adminNav = document.getElementById("adminNav");
 const loginForm = document.getElementById("loginForm");
 const logoutButton = document.getElementById("logoutButton");
 
+// Studio elements (may not exist on all pages)
 const categorySelect = document.getElementById("categorySelect");
 const subcategorySelect = document.getElementById("subcategorySelect");
 const newCategoryInput = document.getElementById("newCategoryInput");
@@ -20,6 +22,7 @@ const createAudioButton = document.getElementById("createAudioButton");
 const studioMessage = document.getElementById("studioMessage");
 const voiceSelect = document.getElementById("voiceSelect");
 
+// Logs elements (may not exist on all pages)
 const filterName = document.getElementById("filterName");
 const filterAge = document.getElementById("filterAge");
 const filterFrom = document.getElementById("filterFrom");
@@ -31,6 +34,16 @@ const logsList = document.getElementById("logsList");
 const state = {
   categories: []
 };
+
+// Get current route from server-rendered variable
+const currentRoute = window.ADMIN_CURRENT_ROUTE || "home";
+
+// Set active nav link
+function updateNavActive() {
+  document.querySelectorAll(".admin-nav .nav-link").forEach(link => {
+    link.classList.toggle("active", link.dataset.route === currentRoute);
+  });
+}
 
 categorySelect?.addEventListener("change", () => {
   populateSubcategories();
@@ -61,15 +74,27 @@ async function request(url, options = {}) {
 
 function toggleView(isAuthenticated) {
   if (isAuthenticated) {
-    loginView.hidden = true;
-    adminPanel.hidden = false;
-    adminStatus.textContent = "Je bent ingelogd als admin.";
-    loadCategories();
-    loadLogs();
+    loginView.style.display = "none";
+    adminPanel.style.display = "block";
+    adminNav.style.display = "flex";
+    logoutButton.style.display = "inline-flex";
+
+    // Update nav and load page-specific data
+    updateNavActive();
+
+    // Load data based on current route
+    if (currentRoute === "studio") {
+      loadCategories();
+    } else if (currentRoute === "logs") {
+      loadLogs();
+    } else if (currentRoute === "home") {
+      loadLogs(10); // Show latest 10 on home
+    }
   } else {
-    loginView.hidden = false;
-    adminPanel.hidden = true;
-    adminStatus.textContent = "Log in om admin functies te gebruiken.";
+    loginView.style.display = "flex";
+    adminPanel.style.display = "none";
+    adminNav.style.display = "none";
+    logoutButton.style.display = "none";
   }
 }
 
@@ -239,26 +264,27 @@ filterLogsButton?.addEventListener("click", () => {
   loadLogs();
 });
 
-async function loadLogs() {
+async function loadLogs(limit = null) {
   const params = new URLSearchParams();
-  if (filterName.value.trim()) params.append("firstName", filterName.value.trim());
-  if (filterAge.value) params.append("age", filterAge.value);
-  if (filterFrom.value) params.append("dateFrom", filterFrom.value);
-  if (filterTo.value) params.append("dateTo", filterTo.value);
-  if (filterSummary.value.trim()) params.append("summary", filterSummary.value.trim());
+  if (limit) params.append("limit", limit);
+  if (filterName?.value?.trim()) params.append("firstName", filterName.value.trim());
+  if (filterAge?.value) params.append("age", filterAge.value);
+  if (filterFrom?.value) params.append("dateFrom", filterFrom.value);
+  if (filterTo?.value) params.append("dateTo", filterTo.value);
+  if (filterSummary?.value?.trim()) params.append("summary", filterSummary.value.trim());
 
   try {
     const data = await request(`/api/admin/logs?${params.toString()}`, { method: "GET" });
     renderLogs(data.logs || []);
   } catch (err) {
     console.error(err);
-    logsList.innerHTML = `<p>${err.message}</p>`;
+    if (logsList) logsList.innerHTML = `<p style="color: var(--admin-muted);">${err.message}</p>`;
   }
 }
 
 function renderLogs(logs) {
   if (!logs.length) {
-    logsList.innerHTML = '<p class="status-text">Geen logs gevonden.</p>';
+    logsList.innerHTML = '<p style="color: var(--admin-muted); text-align: center;">Geen logs gevonden.</p>';
     return;
   }
   logsList.innerHTML = "";
@@ -266,12 +292,9 @@ function renderLogs(logs) {
     const item = document.createElement("article");
     item.className = "log-item";
     const created = new Date(log.created_at).toLocaleString("nl-BE");
+
     const header = document.createElement("div");
-    header.style.display = "flex";
-    header.style.justifyContent = "space-between";
-    header.style.alignItems = "center";
-    header.style.marginBottom = "0.5rem";
-    header.style.gap = "0.5rem";
+    header.className = "log-header";
 
     const chipsContainer = document.createElement("div");
     const nameChip = document.createElement("span");
@@ -281,21 +304,22 @@ function renderLogs(logs) {
 
     if (log.age) {
       const ageChip = document.createElement("span");
-      ageChip.className = "chip";
+      ageChip.className = "chip secondary";
       ageChip.textContent = `${log.age} jaar`;
       chipsContainer.appendChild(ageChip);
     }
 
-    const dateSmall = document.createElement("small");
+    const dateSmall = document.createElement("span");
+    dateSmall.className = "log-date";
     dateSmall.textContent = created;
 
     header.appendChild(chipsContainer);
     header.appendChild(dateSmall);
     item.appendChild(header);
 
+    const summaryDiv = document.createElement("div");
+    summaryDiv.className = "log-summary";
     const summaryList = document.createElement("ul");
-    summaryList.style.margin = "0";
-    summaryList.style.paddingLeft = "1.25rem";
     (log.summary || "")
       .split(/\n+/)
       .filter(Boolean)
@@ -304,7 +328,8 @@ function renderLogs(logs) {
         li.textContent = line;
         summaryList.appendChild(li);
       });
-    item.appendChild(summaryList);
+    summaryDiv.appendChild(summaryList);
+    item.appendChild(summaryDiv);
     logsList.appendChild(item);
   });
 }

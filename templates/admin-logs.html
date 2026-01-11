@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Gesprekslogs</h3>
+    <span class="badge">Realtime</span>
+  </div>
+  <div class="grid-3">
+    <div class="form-group">
+      <label for="filterName">Voornaam</label>
+      <input id="filterName" placeholder="bv. Elo" />
+    </div>
+    <div class="form-group">
+      <label for="filterAge">Leeftijd</label>
+      <select id="filterAge">
+        <option value="">Alle</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="filterSummary">Zoekwoord</label>
+      <input id="filterSummary" placeholder="bv. rekenen" />
+    </div>
+  </div>
+  <div class="grid-2" style="margin-bottom: 1rem;">
+    <div class="form-group">
+      <label for="filterFrom">Vanaf</label>
+      <input id="filterFrom" type="date" />
+    </div>
+    <div class="form-group">
+      <label for="filterTo">Tot</label>
+      <input id="filterTo" type="date" />
+    </div>
+  </div>
+  <button id="filterLogsButton" class="btn primary" type="button">Filter</button>
+</div>
+
+<div class="card">
+  <div class="log-list" id="logsList">
+    <p style="color: var(--admin-muted); text-align: center;">Logs laden...</p>
+  </div>
+</div>
+
