@@ -628,6 +628,41 @@ button:active {
   text-decoration: underline;
 }
 
+/* Advanced panel */
+#advancedPanel {
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mode-toggle-btn:hover {
+  opacity: 0.9;
+}
+
+.mode-toggle-btn.active {
+  background: linear-gradient(135deg, #5a8c50 0%, #4a7543 100%) !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(90, 140, 80, 0.3);
+}
+
+.mode-toggle-btn:not(.active) {
+  background: transparent !important;
+  color: #6f4f44 !important;
+}
+
+.mode-toggle-btn:not(.active):hover {
+  background: rgba(90, 140, 80, 0.1) !important;
+}
+
 #log {
   text-align: left;
   margin-top: 0.75rem;

@@ -147,7 +147,33 @@
     <button id="talkButton">Start gesprek</button>
   </div>
 
-  <a href="#" id="toggleLogs" class="toggle-logs-link" style="display: none;">Toon logs</a>
+  <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+    <a href="#" id="toggleLogs" class="toggle-logs-link" style="display: none;">Toon logs</a>
+    <a href="#" id="toggleAdvanced" class="toggle-logs-link" style="display: none;">Geavanceerd</a>
+  </div>
+
+  <div id="advancedPanel" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(90, 140, 80, 0.08); border-radius: 0.75rem; border: 1px solid rgba(90, 140, 80, 0.2);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+      <h3 style="font-size: 0.9rem; font-weight: 600; color: #6f4f44; margin: 0;">Geavanceerde instellingen</h3>
+      <button id="closeAdvanced" style="background: transparent; border: none; color: #8b7355; cursor: pointer; font-size: 1.2rem; padding: 0; width: auto; margin: 0; line-height: 1;" aria-label="Sluit geavanceerd">✕</button>
+    </div>
+
+    <div class="form-group" style="margin-bottom: 0;">
+      <label style="font-size: 0.85rem; margin-bottom: 0.5rem;">Microfoon modus</label>
+      <div style="display: flex; gap: 0.5rem; background: white; padding: 0.25rem; border-radius: 0.75rem; border: 2px solid rgba(90, 140, 80, 0.2);">
+        <button id="modePushToTalk" class="mode-toggle-btn active" data-mode="push-to-talk" style="flex: 1; padding: 0.5rem 1rem; border: none; border-radius: 0.5rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; background: linear-gradient(135deg, #5a8c50 0%, #4a7543 100%); color: white; width: auto; margin: 0;">
+          🎙️ Push-to-talk
+        </button>
+        <button id="modeOpenMic" class="mode-toggle-btn" data-mode="open-mic" style="flex: 1; padding: 0.5rem 1rem; border: none; border-radius: 0.5rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; background: transparent; color: #6f4f44; width: auto; margin: 0;">
+          🔊 Open mic
+        </button>
+      </div>
+      <p style="font-size: 0.7rem; color: #8b7355; margin-top: 0.5rem; font-style: italic;">
+        <span id="modeDescription">Houd de knop ingedrukt om te praten</span>
+      </p>
+    </div>
+  </div>
+
   <div id="log" style="display: none;"></div>
 </div>
 

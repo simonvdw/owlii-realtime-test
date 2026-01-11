@@ -21,6 +21,7 @@ let conversationType = "standaard";
 let conversationTopic = "";
 let tailTimeoutId = null;
 let conversationStartTime = null;
+let micMode = "push-to-talk"; // "push-to-talk" or "open-mic"
 
 function log(message) {
   console.log(message);
@@ -29,6 +30,17 @@ function log(message) {
   // Show toggle link when there are logs
   if (toggleLogsLink && toggleLogsLink.style.display === 'none') {
     toggleLogsLink.style.display = 'inline-block';
+  }
+}
+
+/**
+ * Update status text based on mic mode
+ */
+function updateStatusForMicMode() {
+  if (micMode === "push-to-talk") {
+    statusEl.textContent = "Verbonden met OWLY. Gebruik de TALK knop om te praten.";
+  } else {
+    statusEl.textContent = "Verbonden met OWLY. Microfoon staat open.";
   }
 }
 
@@ -112,22 +124,31 @@ async function startConversation() {
 
     await session.connect({ apiKey });
 
-    // Mic standaard uit: push to talk
-    session.mute(true);
+    // Set mic mode based on current setting
+    if (micMode === "push-to-talk") {
+      session.mute(true);
+    } else {
+      session.mute(false);
+    }
     conversationStartTime = Date.now();
 
-    statusEl.textContent =
-      "Verbonden met OWLY. Gebruik de TALK knop om te praten.";
+    updateStatusForMicMode();
     button.style.display = "none";
     stopButton.style.display = "inline-block";
     stopButton.disabled = false;
     pushToTalkContainer.style.display = "block";
     pressToTalkButton.disabled = false;
 
+    // Show advanced settings link
+    const toggleAdvancedLink = document.getElementById('toggleAdvanced');
+    if (toggleAdvancedLink) {
+      toggleAdvancedLink.style.display = 'inline-block';
+    }
+
     // Disable conversation type controls during active call
     setConversationControlsEnabled(false);
 
-    log("Connected. Push to talk is actief.");
+    log(`Connected. ${micMode === "push-to-talk" ? "Push to talk" : "Open mic"} is actief.`);
   } catch (err) {
     console.error(err);
     statusEl.textContent = "Kon niet verbinden. Zie console voor details.";
@@ -193,6 +214,17 @@ function stopConversation() {
   pressToTalkButton.disabled = true;
   pressToTalkButton.classList.remove("active");
   pressToTalkButton.classList.remove("tail");
+
+  // Hide advanced settings link and panel
+  const toggleAdvancedLink = document.getElementById('toggleAdvanced');
+  const advancedPanel = document.getElementById('advancedPanel');
+  if (toggleAdvancedLink) {
+    toggleAdvancedLink.style.display = 'none';
+    toggleAdvancedLink.textContent = 'Geavanceerd';
+  }
+  if (advancedPanel) {
+    advancedPanel.style.display = 'none';
+  }
 
   // Re-enable conversation type controls after call ends
   setConversationControlsEnabled(true);
@@ -374,6 +406,10 @@ async function saveConversationLog(historySnapshot, durationMs) {
 const startTalking = (event) => {
   event?.preventDefault?.();
   if (!session) return;
+
+  // Only respond to button press in push-to-talk mode
+  if (micMode !== "push-to-talk") return;
+
   if (tailTimeoutId) {
     clearTimeout(tailTimeoutId);
     tailTimeoutId = null;
@@ -390,6 +426,10 @@ const startTalking = (event) => {
 
 const stopTalking = () => {
   if (!session) return;
+
+  // Only respond to button release in push-to-talk mode
+  if (micMode !== "push-to-talk") return;
+
   if (tailTimeoutId) {
     clearTimeout(tailTimeoutId);
   }
@@ -645,4 +685,86 @@ if (carouselRight) {
 if (conversationTypes[currentTypeIndex] === 'praatover') {
   // Use setTimeout to ensure DOM is ready
   setTimeout(initializeTopicInput, 0);
+}
+
+// Advanced settings panel
+const toggleAdvancedLink = document.getElementById('toggleAdvanced');
+const advancedPanel = document.getElementById('advancedPanel');
+const closeAdvancedButton = document.getElementById('closeAdvanced');
+const modePushToTalkBtn = document.getElementById('modePushToTalk');
+const modeOpenMicBtn = document.getElementById('modeOpenMic');
+const modeDescription = document.getElementById('modeDescription');
+
+if (toggleAdvancedLink && advancedPanel) {
+  toggleAdvancedLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (advancedPanel.style.display === 'none') {
+      advancedPanel.style.display = 'block';
+      toggleAdvancedLink.textContent = 'Verberg geavanceerd';
+    } else {
+      advancedPanel.style.display = 'none';
+      toggleAdvancedLink.textContent = 'Geavanceerd';
+    }
+  });
+}
+
+if (closeAdvancedButton && advancedPanel) {
+  closeAdvancedButton.addEventListener('click', () => {
+    advancedPanel.style.display = 'none';
+    if (toggleAdvancedLink) {
+      toggleAdvancedLink.textContent = 'Geavanceerd';
+    }
+  });
+}
+
+// Mode toggle buttons
+if (modePushToTalkBtn && modeOpenMicBtn) {
+  modePushToTalkBtn.addEventListener('click', () => {
+    if (micMode === 'push-to-talk') return; // Already in this mode
+
+    micMode = 'push-to-talk';
+    modePushToTalkBtn.classList.add('active');
+    modeOpenMicBtn.classList.remove('active');
+
+    if (modeDescription) {
+      modeDescription.textContent = 'Houd de knop ingedrukt om te praten';
+    }
+
+    // If session is active, mute the mic
+    if (session) {
+      try {
+        session.mute(true);
+        pressToTalkButton.classList.remove("active");
+        pressToTalkButton.classList.remove("tail");
+        updateStatusForMicMode();
+        log("Overgeschakeld naar push-to-talk modus.");
+      } catch (err) {
+        console.error("Error switching to push-to-talk:", err);
+      }
+    }
+  });
+
+  modeOpenMicBtn.addEventListener('click', () => {
+    if (micMode === 'open-mic') return; // Already in this mode
+
+    micMode = 'open-mic';
+    modeOpenMicBtn.classList.add('active');
+    modePushToTalkBtn.classList.remove('active');
+
+    if (modeDescription) {
+      modeDescription.textContent = 'Microfoon staat altijd open';
+    }
+
+    // If session is active, unmute the mic
+    if (session) {
+      try {
+        session.mute(false);
+        pressToTalkButton.classList.add("active");
+        updateStatusForMicMode();
+        log("Overgeschakeld naar open mic modus.");
+      } catch (err) {
+        console.error("Error switching to open mic:", err);
+      }
+    }
+  });
 }
