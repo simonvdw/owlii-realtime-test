@@ -111,12 +111,31 @@ async function startConversation() {
 
     session = new RealtimeSession(agent, {
       model: "gpt-realtime",
+      turn_detection: {
+        type: "server_vad",
+        threshold: 0.5,
+        prefix_padding_ms: 300,
+        silence_duration_ms: 500
+      }
     });
 
     // Basis error logging
     session.on("error", (err) => {
       console.error("Session error:", err);
       statusEl.textContent = "Er is een fout in de sessie. Zie console.";
+    });
+
+    // Debug: Monitor audio input
+    session.on("input_audio_buffer.speech_started", () => {
+      log("🎤 Speech detected!");
+    });
+
+    session.on("input_audio_buffer.speech_stopped", () => {
+      log("🎤 Speech stopped");
+    });
+
+    session.on("input_audio_buffer.committed", () => {
+      log("✅ Audio committed to server");
     });
 
     statusEl.textContent = "Verbinding maken met Realtime API...";
@@ -127,8 +146,13 @@ async function startConversation() {
     // Set mic mode based on current setting
     if (micMode === "push-to-talk") {
       session.mute(true);
+      log("Mic muted for push-to-talk mode");
     } else {
       session.mute(false);
+      log("Mic unmuted for open mic mode");
+      console.log("Session muted state:", session.isMuted());
+      // In open mic mode, show the button as active
+      pressToTalkButton.classList.add("active");
     }
     conversationStartTime = Date.now();
 
@@ -759,6 +783,7 @@ if (modePushToTalkBtn && modeOpenMicBtn) {
     if (session) {
       try {
         session.mute(false);
+        console.log("Switched to open mic, muted state:", session.isMuted());
         pressToTalkButton.classList.add("active");
         updateStatusForMicMode();
         log("Overgeschakeld naar open mic modus.");
