@@ -111,12 +111,6 @@ async function startConversation() {
 
     session = new RealtimeSession(agent, {
       model: "gpt-realtime",
-      turn_detection: {
-        type: "server_vad",
-        threshold: 0.5,
-        prefix_padding_ms: 300,
-        silence_duration_ms: 500
-      }
     });
 
     // Basis error logging
@@ -783,7 +777,7 @@ if (modePushToTalkBtn && modeOpenMicBtn) {
     if (session) {
       try {
         session.mute(false);
-        console.log("Switched to open mic, muted state:", session.isMuted());
+        console.log("Switched to open mic mode - microphone unmuted");
         pressToTalkButton.classList.add("active");
         updateStatusForMicMode();
         log("Overgeschakeld naar open mic modus.");
