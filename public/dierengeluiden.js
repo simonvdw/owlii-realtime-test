@@ -148,6 +148,11 @@
   // Check answer
   function checkAnimalAnswer(selectedAnimal) {
     const answerButtons = document.querySelectorAll('.animal-answer-button');
+    const isCorrect = selectedAnimal === correctAnimal;
+
+    // Play sound effect
+    const soundEffect = new Audio(isCorrect ? 'assets/rekenmaar-succes.mp3' : 'assets/rekenmaar-fail.mp3');
+    soundEffect.play().catch(err => console.log('Audio play failed:', err));
 
     // Disable all buttons
     answerButtons.forEach(button => {
@@ -162,7 +167,7 @@
     });
 
     // Update score if correct
-    if (selectedAnimal === correctAnimal) {
+    if (isCorrect) {
       score++;
       document.getElementById('animalCurrentScore').textContent = score;
     }
