@@ -1,11 +1,7 @@
 const { Pool } = require("pg");
 
 const pool = new Pool({
-  host: process.env.DB_HOST || "dpg-d4vg7vemcj7s73dn0nf0-a",
-  port: Number(process.env.DB_PORT || 5432),
-  database: process.env.DB_NAME || "owly_postgres_db",
-  user: process.env.DB_USER || "owly_postgres_db_user",
-  password: process.env.DB_PASSWORD || "H7muDNQ42ufBVKXSSw3F8nn3LiwSAAz9",
+  connectionString: process.env.DATABASE_URL,
   ssl: process.env.DB_SSL === "false" ? false : { rejectUnauthorized: false }
 });
 

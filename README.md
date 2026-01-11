@@ -67,19 +67,46 @@ cd owlii-realtime-test
 npm install
 ```
 
-3. Maak een `.env` bestand met je sleutels (Render waarden staan hieronder als fallback in de code):
+3. **Configureer de database:**
+
+   **Optie A: Lokale PostgreSQL (aanbevolen voor development)**
+
+   a. Installeer PostgreSQL (als nog niet geïnstalleerd):
+   ```bash
+   brew install postgresql@14
+   brew services start postgresql@14
+   ```
+
+   b. Maak een lokale database aan:
+   ```bash
+   createdb owlii_realtime_dev
+   ```
+
+   c. Maak een `.env` bestand met lokale database configuratie:
+   ```bash
+   PORT=3000
+   OPENAI_API_KEY=sk-proj-...
+   DATABASE_URL=postgresql://localhost/owlii_realtime_dev
+   DB_SSL=false
+   SESSION_SECRET=iets-super-geheim
+   ```
+
+   **Optie B: Remote database (Render)**
+
+   Maak een `.env` bestand met remote database configuratie:
+   ```bash
+   PORT=3000
+   OPENAI_API_KEY=sk-proj-...
+   DATABASE_URL=postgresql://owly_postgres_db_user:H7muDNQ42ufBVKXSSw3F8nn3LiwSAAz9@dpg-d4vg7vemcj7s73dn0nf0-a/owly_postgres_db
+   SESSION_SECRET=iets-super-geheim
+   ```
+
+4. Start de development server:
 ```bash
-OPENAI_API_KEY=sk-proj-...
-PORT=3000
-DB_HOST=dpg-d4vg7vemcj7s73dn0nf0-a
-DB_PORT=5432
-DB_NAME=owly_postgres_db
-DB_USER=owly_postgres_db_user
-DB_PASSWORD=H7muDNQ42ufBVKXSSw3F8nn3LiwSAAz9
-SESSION_SECRET=iets-super-geheim
+npm run dev
 ```
 
-4. Start de server:
+   Of voor productie:
 ```bash
 npm start
 ```
@@ -88,6 +115,8 @@ npm start
 ```
 http://localhost:3000
 ```
+
+   De database tabellen worden automatisch aangemaakt bij de eerste start.
 
 ## 🎮 Gebruik
 

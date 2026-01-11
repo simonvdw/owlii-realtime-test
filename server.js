@@ -151,10 +151,13 @@ app.post("/api/logs", async (req, res) => {
 initDb()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Owlii test server running on http://localhost:${PORT}`);
+      console.log(`\n🦉 Owlii test server running on http://localhost:${PORT}\n`);
     });
   })
   .catch((err) => {
-    console.error("Kon database niet initialiseren", err);
-    process.exit(1);
+    console.error("⚠️  Database initialization failed:", err.message);
+    console.log("Starting server anyway (database features will be disabled)...\n");
+    app.listen(PORT, () => {
+      console.log(`🦉 Owlii test server running on http://localhost:${PORT} (without database)\n`);
+    });
   });
