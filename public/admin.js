@@ -21,6 +21,8 @@ const generateTextButton = document.getElementById("generateTextButton");
 const createAudioButton = document.getElementById("createAudioButton");
 const studioMessage = document.getElementById("studioMessage");
 const voiceSelect = document.getElementById("voiceSelect");
+const studioEntriesList = document.getElementById("studioEntriesList");
+const refreshEntriesButton = document.getElementById("refreshEntriesButton");
 
 // Logs elements (may not exist on all pages)
 const filterName = document.getElementById("filterName");
@@ -86,6 +88,7 @@ function toggleView(isAuthenticated) {
     // Load data based on current route
     if (currentRoute === "studio") {
       loadCategories();
+      loadStudioEntries();
     } else if (currentRoute === "logs") {
       loadLogs();
     } else if (currentRoute === "home") {
@@ -253,6 +256,7 @@ createAudioButton?.addEventListener("click", async () => {
       body: JSON.stringify(payload)
     });
     studioMessage.textContent = `Audio opgeslagen: ${entry.audio_path}`;
+    loadStudioEntries(); // Refresh the list
   } catch (err) {
     studioMessage.textContent = err.message;
   } finally {
@@ -264,6 +268,84 @@ createAudioButton?.addEventListener("click", async () => {
 filterLogsButton?.addEventListener("click", () => {
   loadLogs();
 });
+
+refreshEntriesButton?.addEventListener("click", () => {
+  loadStudioEntries();
+});
+
+async function loadStudioEntries() {
+  if (!studioEntriesList) return;
+
+  studioEntriesList.innerHTML = '<p style="color: var(--admin-muted); text-align: center;">Laden...</p>';
+
+  try {
+    const data = await request("/api/admin/studio/entries", { method: "GET" });
+    renderStudioEntries(data.entries || []);
+  } catch (err) {
+    console.error("Kon studio entries niet laden", err);
+    studioEntriesList.innerHTML = `<p style="color: var(--admin-muted); text-align: center;">${err.message}</p>`;
+  }
+}
+
+function renderStudioEntries(entries) {
+  if (!entries.length) {
+    studioEntriesList.innerHTML = '<p style="color: var(--admin-muted); text-align: center;">Nog geen audio gegenereerd.</p>';
+    return;
+  }
+
+  studioEntriesList.innerHTML = "";
+
+  entries.forEach((entry) => {
+    const item = document.createElement("article");
+    item.className = "entry-item";
+
+    const created = new Date(entry.created_at).toLocaleString("nl-BE");
+    const title = entry.title || "Zonder titel";
+    const type = entry.entry_type || "onbekend";
+
+    item.innerHTML = `
+      <div class="entry-header">
+        <div class="entry-info">
+          <strong>${title}</strong>
+          <span class="chip small">${type}</span>
+          ${entry.category_name ? `<span class="chip secondary small">${entry.category_name}</span>` : ""}
+          ${entry.subcategory_name ? `<span class="chip secondary small">${entry.subcategory_name}</span>` : ""}
+        </div>
+        <span class="entry-date">${created}</span>
+      </div>
+      <div class="entry-controls">
+        <audio controls src="${entry.audio_path}" preload="none"></audio>
+        <div class="entry-buttons">
+          <a href="${entry.audio_path}" download class="btn secondary small">⬇️ Download</a>
+          <button class="btn danger small delete-entry-btn" data-id="${entry.id}">🗑️ Verwijder</button>
+        </div>
+      </div>
+      ${entry.content_text ? `<details class="entry-text"><summary>Bekijk tekst</summary><p>${entry.content_text.replace(/\n/g, "<br>")}</p></details>` : ""}
+    `;
+
+    studioEntriesList.appendChild(item);
+  });
+
+  // Add delete handlers
+  studioEntriesList.querySelectorAll(".delete-entry-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if (!confirm("Weet je zeker dat je deze entry wilt verwijderen?")) return;
+
+      const id = btn.dataset.id;
+      btn.disabled = true;
+      btn.textContent = "...";
+
+      try {
+        await request(`/api/admin/studio/entries/${id}`, { method: "DELETE" });
+        loadStudioEntries();
+      } catch (err) {
+        alert(`Verwijderen mislukt: ${err.message}`);
+        btn.disabled = false;
+        btn.textContent = "🗑️ Verwijder";
+      }
+    });
+  });
+}
 
 async function loadLogs(limit = null) {
   const params = new URLSearchParams();

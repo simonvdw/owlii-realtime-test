@@ -1,8 +1,12 @@
 const { Pool } = require("pg");
 
 // Use DATABASE_URL if provided, otherwise use Render external database URL
+const connectionString = process.env.DATABASE_URL || "postgres://owly_postgres_db_user:H7muDNQ42ufBVKXSSw3F8nn3LiwSAAz9@dpg-d4vg7vemcj7s73dn0nf0-a.oregon-postgres.render.com/owly_postgres_db";
+const isLocalDb = connectionString.includes("localhost");
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || "postgres://owly_postgres_db_user:H7muDNQ42ufBVKXSSw3F8nn3LiwSAAz9@dpg-d4vg7vemcj7s73dn0nf0-a.oregon-postgres.render.com/owly_postgres_db"
+  connectionString,
+  ssl: isLocalDb ? false : { rejectUnauthorized: false }
 });
 
 async function query(text, params) {

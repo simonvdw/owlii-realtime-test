@@ -149,6 +149,55 @@ router.post("/studio/audio", async (req, res) => {
   }
 });
 
+router.get("/studio/entries", async (req, res) => {
+  try {
+    const { rows } = await query(`
+      SELECT e.*,
+             c.name as category_name,
+             sc.name as subcategory_name
+      FROM studio_entries e
+      LEFT JOIN studio_categories c ON e.category_id = c.id
+      LEFT JOIN studio_categories sc ON e.subcategory_id = sc.id
+      ORDER BY e.created_at DESC
+      LIMIT 50
+    `);
+    res.json({ entries: rows });
+  } catch (err) {
+    console.error("Failed to load studio entries:", err);
+    res.status(500).json({ error: "Kon entries niet laden" });
+  }
+});
+
+router.delete("/studio/entries/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    return res.status(400).json({ error: "Ongeldig ID" });
+  }
+  try {
+    // Get the audio path first to delete the file
+    const { rows } = await query("SELECT audio_path FROM studio_entries WHERE id = $1", [id]);
+    if (!rows.length) {
+      return res.status(404).json({ error: "Entry niet gevonden" });
+    }
+
+    // Delete the audio file if it exists
+    const audioPath = rows[0].audio_path;
+    if (audioPath) {
+      const filePath = path.join(__dirname, "..", "public", audioPath);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
+    // Delete from database
+    await query("DELETE FROM studio_entries WHERE id = $1", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Failed to delete studio entry:", err);
+    res.status(500).json({ error: "Kon entry niet verwijderen" });
+  }
+});
+
 router.get("/logs", async (req, res) => {
   const {
     firstName,
