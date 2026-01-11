@@ -3,40 +3,46 @@
     <h3>Gesprekslogs</h3>
     <span class="badge">Realtime</span>
   </div>
-  <div class="grid-3">
-    <div class="form-group">
-      <label for="filterName">Voornaam</label>
-      <input id="filterName" placeholder="bv. Elo" />
+
+  <div class="search-row">
+    <div class="form-group" style="flex: 1; margin-bottom: 0;">
+      <input id="filterSummary" placeholder="Zoek in gesprekken..." />
     </div>
-    <div class="form-group">
-      <label for="filterAge">Leeftijd</label>
-      <select id="filterAge">
-        <option value="">Alle</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-        <option value="11">11</option>
-        <option value="12">12</option>
-      </select>
+    <button id="filterLogsButton" class="btn primary" type="button">Zoek</button>
+    <button id="toggleAdvancedFilter" class="btn secondary small" type="button">+ Filters</button>
+  </div>
+
+  <div id="advancedFilters" class="advanced-filters" style="display: none;">
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="filterName">Voornaam</label>
+        <input id="filterName" placeholder="bv. Elo" />
+      </div>
+      <div class="form-group">
+        <label for="filterAge">Leeftijd</label>
+        <select id="filterAge">
+          <option value="">Alle</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+        </select>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="filterSummary">Zoekwoord</label>
-      <input id="filterSummary" placeholder="bv. rekenen" />
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="filterFrom">Vanaf</label>
+        <input id="filterFrom" type="date" />
+      </div>
+      <div class="form-group">
+        <label for="filterTo">Tot</label>
+        <input id="filterTo" type="date" />
+      </div>
     </div>
   </div>
-  <div class="grid-2" style="margin-bottom: 1rem;">
-    <div class="form-group">
-      <label for="filterFrom">Vanaf</label>
-      <input id="filterFrom" type="date" />
-    </div>
-    <div class="form-group">
-      <label for="filterTo">Tot</label>
-      <input id="filterTo" type="date" />
-    </div>
-  </div>
-  <button id="filterLogsButton" class="btn primary" type="button">Filter</button>
 </div>
 
 <div class="card">

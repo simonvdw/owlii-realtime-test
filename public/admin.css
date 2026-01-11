@@ -406,6 +406,24 @@ textarea {
   background: #dc2626;
 }
 
+/* Search row */
+.search-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.search-row input {
+  font-size: 1rem;
+}
+
+.advanced-filters {
+  padding-top: 1rem;
+  border-top: 1px solid var(--admin-border);
+  margin-top: 0.5rem;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .admin-header { padding: 0.75rem 1rem; }

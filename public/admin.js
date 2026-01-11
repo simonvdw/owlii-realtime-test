@@ -31,6 +31,8 @@ const filterFrom = document.getElementById("filterFrom");
 const filterTo = document.getElementById("filterTo");
 const filterSummary = document.getElementById("filterSummary");
 const filterLogsButton = document.getElementById("filterLogsButton");
+const toggleAdvancedFilter = document.getElementById("toggleAdvancedFilter");
+const advancedFilters = document.getElementById("advancedFilters");
 const logsList = document.getElementById("logsList");
 
 const state = {
@@ -267,6 +269,19 @@ createAudioButton?.addEventListener("click", async () => {
 
 filterLogsButton?.addEventListener("click", () => {
   loadLogs();
+});
+
+// Enter key triggers search
+filterSummary?.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    loadLogs();
+  }
+});
+
+toggleAdvancedFilter?.addEventListener("click", () => {
+  const isHidden = advancedFilters.style.display === "none";
+  advancedFilters.style.display = isHidden ? "block" : "none";
+  toggleAdvancedFilter.textContent = isHidden ? "− Filters" : "+ Filters";
 });
 
 refreshEntriesButton?.addEventListener("click", () => {
